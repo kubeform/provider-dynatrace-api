@@ -33,7 +33,7 @@ func GetEncoder() map[string]jsoniter.ValEncoder {
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoad{}).Type1()):                                                        AnomaliesSpecLoadCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops{}).Type1()):                                                   AnomaliesSpecLoadDropsCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadSpikes{}).Type1()):                                                  AnomaliesSpecLoadSpikesCodec{},
-		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops{}).Type1()):                                                   AnomaliesSpecLoadDropsCodec{},
+		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops2{}).Type1()):                                                  AnomaliesSpecLoadDrops2Codec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecResponseTimes{}).Type1()):                                               AnomaliesSpecResponseTimesCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecResponseTimesAuto{}).Type1()):                                           AnomaliesSpecResponseTimesAutoCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecResponseTimesThresholds{}).Type1()):                                     AnomaliesSpecResponseTimesThresholdsCodec{},
@@ -60,7 +60,7 @@ func GetDecoder() map[string]jsoniter.ValDecoder {
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoad{}).Type1()):                                                        AnomaliesSpecLoadCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops{}).Type1()):                                                   AnomaliesSpecLoadDropsCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadSpikes{}).Type1()):                                                  AnomaliesSpecLoadSpikesCodec{},
-		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops{}).Type1()):                                                   AnomaliesSpecLoadDropsCodec{},
+		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops2{}).Type1()):                                                  AnomaliesSpecLoadDrops2Codec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecResponseTimes{}).Type1()):                                               AnomaliesSpecResponseTimesCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecResponseTimesAuto{}).Type1()):                                           AnomaliesSpecResponseTimesAutoCodec{},
 		jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecResponseTimesThresholds{}).Type1()):                                     AnomaliesSpecResponseTimesThresholdsCodec{},
@@ -566,18 +566,18 @@ func (AnomaliesSpecLoadSpikesCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.It
 }
 
 // +k8s:deepcopy-gen=false
-type AnomaliesSpecLoadDropsCodec struct {
+type AnomaliesSpecLoadDrops2Codec struct {
 }
 
-func (AnomaliesSpecLoadDropsCodec) IsEmpty(ptr unsafe.Pointer) bool {
-	return (*AnomaliesSpecLoadDrops)(ptr) == nil
+func (AnomaliesSpecLoadDrops2Codec) IsEmpty(ptr unsafe.Pointer) bool {
+	return (*AnomaliesSpecLoadDrops2)(ptr) == nil
 }
 
-func (AnomaliesSpecLoadDropsCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
-	obj := (*AnomaliesSpecLoadDrops)(ptr)
-	var objs []AnomaliesSpecLoadDrops
+func (AnomaliesSpecLoadDrops2Codec) Encode(ptr unsafe.Pointer, stream *jsoniter.Stream) {
+	obj := (*AnomaliesSpecLoadDrops2)(ptr)
+	var objs []AnomaliesSpecLoadDrops2
 	if obj != nil {
-		objs = []AnomaliesSpecLoadDrops{*obj}
+		objs = []AnomaliesSpecLoadDrops2{*obj}
 	}
 
 	jsonit := jsoniter.Config{
@@ -585,7 +585,7 @@ func (AnomaliesSpecLoadDropsCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.S
 		SortMapKeys:            true,
 		ValidateJsonRawMessage: true,
 		TagKey:                 "tf",
-		TypeEncoders:           getEncodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops{}).Type1())),
+		TypeEncoders:           getEncodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops2{}).Type1())),
 	}.Froze()
 
 	byt, _ := jsonit.Marshal(objs)
@@ -593,54 +593,54 @@ func (AnomaliesSpecLoadDropsCodec) Encode(ptr unsafe.Pointer, stream *jsoniter.S
 	stream.Write(byt)
 }
 
-func (AnomaliesSpecLoadDropsCodec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
+func (AnomaliesSpecLoadDrops2Codec) Decode(ptr unsafe.Pointer, iter *jsoniter.Iterator) {
 	switch iter.WhatIsNext() {
 	case jsoniter.NilValue:
 		iter.Skip()
-		*(*AnomaliesSpecLoadDrops)(ptr) = AnomaliesSpecLoadDrops{}
+		*(*AnomaliesSpecLoadDrops2)(ptr) = AnomaliesSpecLoadDrops2{}
 		return
 	case jsoniter.ArrayValue:
 		objsByte := iter.SkipAndReturnBytes()
 		if len(objsByte) > 0 {
-			var objs []AnomaliesSpecLoadDrops
+			var objs []AnomaliesSpecLoadDrops2
 
 			jsonit := jsoniter.Config{
 				EscapeHTML:             true,
 				SortMapKeys:            true,
 				ValidateJsonRawMessage: true,
 				TagKey:                 "tf",
-				TypeDecoders:           getDecodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops{}).Type1())),
+				TypeDecoders:           getDecodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops2{}).Type1())),
 			}.Froze()
 			jsonit.Unmarshal(objsByte, &objs)
 
 			if len(objs) > 0 {
-				*(*AnomaliesSpecLoadDrops)(ptr) = objs[0]
+				*(*AnomaliesSpecLoadDrops2)(ptr) = objs[0]
 			} else {
-				*(*AnomaliesSpecLoadDrops)(ptr) = AnomaliesSpecLoadDrops{}
+				*(*AnomaliesSpecLoadDrops2)(ptr) = AnomaliesSpecLoadDrops2{}
 			}
 		} else {
-			*(*AnomaliesSpecLoadDrops)(ptr) = AnomaliesSpecLoadDrops{}
+			*(*AnomaliesSpecLoadDrops2)(ptr) = AnomaliesSpecLoadDrops2{}
 		}
 	case jsoniter.ObjectValue:
 		objByte := iter.SkipAndReturnBytes()
 		if len(objByte) > 0 {
-			var obj AnomaliesSpecLoadDrops
+			var obj AnomaliesSpecLoadDrops2
 
 			jsonit := jsoniter.Config{
 				EscapeHTML:             true,
 				SortMapKeys:            true,
 				ValidateJsonRawMessage: true,
 				TagKey:                 "tf",
-				TypeDecoders:           getDecodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops{}).Type1())),
+				TypeDecoders:           getDecodersWithout(jsoniter.MustGetKind(reflect2.TypeOf(AnomaliesSpecLoadDrops2{}).Type1())),
 			}.Froze()
 			jsonit.Unmarshal(objByte, &obj)
 
-			*(*AnomaliesSpecLoadDrops)(ptr) = obj
+			*(*AnomaliesSpecLoadDrops2)(ptr) = obj
 		} else {
-			*(*AnomaliesSpecLoadDrops)(ptr) = AnomaliesSpecLoadDrops{}
+			*(*AnomaliesSpecLoadDrops2)(ptr) = AnomaliesSpecLoadDrops2{}
 		}
 	default:
-		iter.ReportError("decode AnomaliesSpecLoadDrops", "unexpected JSON type")
+		iter.ReportError("decode AnomaliesSpecLoadDrops2", "unexpected JSON type")
 	}
 }
 

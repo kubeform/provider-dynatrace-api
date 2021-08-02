@@ -100,7 +100,7 @@ type AnomaliesSpecLoad struct {
 	Spikes *AnomaliesSpecLoadSpikes `json:"spikes,omitempty" tf:"spikes"`
 }
 
-type AnomaliesSpecLoadDrops struct {
+type AnomaliesSpecLoadDrops2 struct {
 	// Alert if the service stays in abnormal state for at least *X* minutes
 	// +optional
 	Minutes *int64 `json:"minutes,omitempty" tf:"minutes"`
@@ -171,7 +171,7 @@ type AnomaliesSpecResource struct {
 	Load *AnomaliesSpecLoad `json:"load,omitempty" tf:"load"`
 	// The configuration of load drops detection. Detecting load drops will be disabled if this block is omitted.
 	// +optional
-	LoadDrops *AnomaliesSpecLoadDrops `json:"loadDrops,omitempty" tf:"load_drops"`
+	LoadDrops2 *AnomaliesSpecLoadDrops2 `json:"loadDrops,omitempty" tf:"load_drops"`
 	// Configuration of response time degradation detection. Detecting response time degradation will be disabled if this block is omitted.
 	// +optional
 	ResponseTimes *AnomaliesSpecResponseTimes `json:"responseTimes,omitempty" tf:"response_times"`

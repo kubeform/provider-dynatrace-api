@@ -1,0 +1,528 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: anomalies.service.dynatrace.kubeform.com
+spec:
+  group: service.dynatrace.kubeform.com
+  names:
+    kind: Anomalies
+    listKind: AnomaliesList
+    plural: anomalies
+    singular: anomalies
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  failureRates:
+                    description: Configuration of failure rate increase detection.
+                      Detecting failure rate increases will be disabled if this block
+                      is omitted.
+                    properties:
+                      auto:
+                        description: 'Parameters of failure rate increase auto-detection.
+                          Example: If the expected error rate is 1.5%, and you set
+                          an absolute increase of 1%, and a relative increase of 50%,
+                          the thresholds will be:  Absolute: 1.5% + **1%** = 2.5%  Relative:
+                          1.5% + 1.5% * **50%** = 2.25%'
+                        properties:
+                          absolute:
+                            description: Absolute increase of failing service calls
+                              to trigger an alert, %
+                            format: int64
+                            type: integer
+                          relative:
+                            description: Relative increase of failing service calls
+                              to trigger an alert, %
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - absolute
+                        - relative
+                        type: object
+                      thresholds:
+                        description: Fixed thresholds for failure rate increase detection
+                        properties:
+                          sensitivity:
+                            description: Sensitivity of the threshold.  With `low`
+                              sensitivity, high statistical confidence is used. Brief
+                              violations (for example, due to a surge in load) won't
+                              trigger alerts.  With `high` sensitivity, no statistical
+                              confidence is used. Each violation triggers alert
+                            type: string
+                          threshold:
+                            description: Failure rate during any 5-minute period to
+                              trigger an alert, %
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - sensitivity
+                        - threshold
+                        type: object
+                    type: object
+                  id:
+                    type: string
+                  load:
+                    description: The configuration of load spikes detection. Detecting
+                      load spikes will be disabled if this block is omitted.
+                    properties:
+                      drops:
+                        description: The configuration of traffic drops detection
+                        properties:
+                          minutes:
+                            description: Alert if the service stays in abnormal state
+                              for at least *X* minutes
+                            format: int64
+                            type: integer
+                          percent:
+                            description: Alert if the observed load is more than *X*
+                              % of the expected value
+                            format: int64
+                            type: integer
+                        type: object
+                      spikes:
+                        description: The configuration of traffic spikes detection
+                        properties:
+                          minutes:
+                            description: Alert if the service stays in abnormal state
+                              for at least *X* minutes
+                            format: int64
+                            type: integer
+                          percent:
+                            description: Alert if the observed load is more than *X*
+                              % of the expected value
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        type: object
+                    type: object
+                  loadDrops:
+                    description: The configuration of load drops detection. Detecting
+                      load drops will be disabled if this block is omitted.
+                    properties:
+                      minutes:
+                        description: Alert if the service stays in abnormal state
+                          for at least *X* minutes
+                        format: int64
+                        type: integer
+                      percent:
+                        description: Alert if the observed load is more than *X* %
+                          of the expected value
+                        format: int64
+                        type: integer
+                    type: object
+                  responseTimes:
+                    description: Configuration of response time degradation detection.
+                      Detecting response time degradation will be disabled if this
+                      block is omitted.
+                    properties:
+                      auto:
+                        description: Parameters of the response time degradation auto-detection.
+                          Violation of **any** criterion triggers an alert
+                        properties:
+                          load:
+                            description: Minimal service load to detect response time
+                              degradation. Response time degradation of services with
+                              smaller load won't trigger alerts. Possible values are
+                              `FIFTEEN_REQUESTS_PER_MINUTE`, `FIVE_REQUESTS_PER_MINUTE`,
+                              `ONE_REQUEST_PER_MINUTE` and `TEN_REQUESTS_PER_MINUTE`
+                            type: string
+                          milliseconds:
+                            description: Alert if the response time degrades by more
+                              than *X* milliseconds
+                            format: int64
+                            type: integer
+                          percent:
+                            description: Alert if the response time degrades by more
+                              than *X* %
+                            format: int64
+                            type: integer
+                          slowestMilliseconds:
+                            description: Alert if the response time of the slowest
+                              10% degrades by more than *X* milliseconds
+                            format: int64
+                            type: integer
+                          slowestPercent:
+                            description: Alert if the response time of the slowest
+                              10% degrades by more than *X* milliseconds
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - load
+                        - milliseconds
+                        - percent
+                        - slowestMilliseconds
+                        - slowestPercent
+                        type: object
+                      thresholds:
+                        description: Fixed thresholds for response time degradation
+                          detection
+                        properties:
+                          load:
+                            description: Minimal service load to detect response time
+                              degradation. Response time degradation of services with
+                              smaller load won't trigger alerts. Possible values are
+                              `FIFTEEN_REQUESTS_PER_MINUTE`, `FIVE_REQUESTS_PER_MINUTE`,
+                              `ONE_REQUEST_PER_MINUTE` and `TEN_REQUESTS_PER_MINUTE`
+                            type: string
+                          milliseconds:
+                            description: Response time during any 5-minute period
+                              to trigger an alert, in milliseconds
+                            format: int64
+                            type: integer
+                          sensitivity:
+                            description: Sensitivity of the threshold.  With `low`
+                              sensitivity, high statistical confidence is used. Brief
+                              violations (for example, due to a surge in load) won't
+                              trigger alerts.  With `high` sensitivity, no statistical
+                              confidence is used. Each violation triggers an alert
+                            type: string
+                          slowestMilliseconds:
+                            description: Response time of the 10% slowest during any
+                              5-minute period to trigger an alert, in milliseconds
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - load
+                        - milliseconds
+                        - sensitivity
+                        - slowestMilliseconds
+                        type: object
+                    type: object
+                type: object
+              state:
+                properties:
+                  failureRates:
+                    description: Configuration of failure rate increase detection.
+                      Detecting failure rate increases will be disabled if this block
+                      is omitted.
+                    properties:
+                      auto:
+                        description: 'Parameters of failure rate increase auto-detection.
+                          Example: If the expected error rate is 1.5%, and you set
+                          an absolute increase of 1%, and a relative increase of 50%,
+                          the thresholds will be:  Absolute: 1.5% + **1%** = 2.5%  Relative:
+                          1.5% + 1.5% * **50%** = 2.25%'
+                        properties:
+                          absolute:
+                            description: Absolute increase of failing service calls
+                              to trigger an alert, %
+                            format: int64
+                            type: integer
+                          relative:
+                            description: Relative increase of failing service calls
+                              to trigger an alert, %
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - absolute
+                        - relative
+                        type: object
+                      thresholds:
+                        description: Fixed thresholds for failure rate increase detection
+                        properties:
+                          sensitivity:
+                            description: Sensitivity of the threshold.  With `low`
+                              sensitivity, high statistical confidence is used. Brief
+                              violations (for example, due to a surge in load) won't
+                              trigger alerts.  With `high` sensitivity, no statistical
+                              confidence is used. Each violation triggers alert
+                            type: string
+                          threshold:
+                            description: Failure rate during any 5-minute period to
+                              trigger an alert, %
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - sensitivity
+                        - threshold
+                        type: object
+                    type: object
+                  id:
+                    type: string
+                  load:
+                    description: The configuration of load spikes detection. Detecting
+                      load spikes will be disabled if this block is omitted.
+                    properties:
+                      drops:
+                        description: The configuration of traffic drops detection
+                        properties:
+                          minutes:
+                            description: Alert if the service stays in abnormal state
+                              for at least *X* minutes
+                            format: int64
+                            type: integer
+                          percent:
+                            description: Alert if the observed load is more than *X*
+                              % of the expected value
+                            format: int64
+                            type: integer
+                        type: object
+                      spikes:
+                        description: The configuration of traffic spikes detection
+                        properties:
+                          minutes:
+                            description: Alert if the service stays in abnormal state
+                              for at least *X* minutes
+                            format: int64
+                            type: integer
+                          percent:
+                            description: Alert if the observed load is more than *X*
+                              % of the expected value
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        type: object
+                    type: object
+                  loadDrops:
+                    description: The configuration of load drops detection. Detecting
+                      load drops will be disabled if this block is omitted.
+                    properties:
+                      minutes:
+                        description: Alert if the service stays in abnormal state
+                          for at least *X* minutes
+                        format: int64
+                        type: integer
+                      percent:
+                        description: Alert if the observed load is more than *X* %
+                          of the expected value
+                        format: int64
+                        type: integer
+                    type: object
+                  responseTimes:
+                    description: Configuration of response time degradation detection.
+                      Detecting response time degradation will be disabled if this
+                      block is omitted.
+                    properties:
+                      auto:
+                        description: Parameters of the response time degradation auto-detection.
+                          Violation of **any** criterion triggers an alert
+                        properties:
+                          load:
+                            description: Minimal service load to detect response time
+                              degradation. Response time degradation of services with
+                              smaller load won't trigger alerts. Possible values are
+                              `FIFTEEN_REQUESTS_PER_MINUTE`, `FIVE_REQUESTS_PER_MINUTE`,
+                              `ONE_REQUEST_PER_MINUTE` and `TEN_REQUESTS_PER_MINUTE`
+                            type: string
+                          milliseconds:
+                            description: Alert if the response time degrades by more
+                              than *X* milliseconds
+                            format: int64
+                            type: integer
+                          percent:
+                            description: Alert if the response time degrades by more
+                              than *X* %
+                            format: int64
+                            type: integer
+                          slowestMilliseconds:
+                            description: Alert if the response time of the slowest
+                              10% degrades by more than *X* milliseconds
+                            format: int64
+                            type: integer
+                          slowestPercent:
+                            description: Alert if the response time of the slowest
+                              10% degrades by more than *X* milliseconds
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - load
+                        - milliseconds
+                        - percent
+                        - slowestMilliseconds
+                        - slowestPercent
+                        type: object
+                      thresholds:
+                        description: Fixed thresholds for response time degradation
+                          detection
+                        properties:
+                          load:
+                            description: Minimal service load to detect response time
+                              degradation. Response time degradation of services with
+                              smaller load won't trigger alerts. Possible values are
+                              `FIFTEEN_REQUESTS_PER_MINUTE`, `FIVE_REQUESTS_PER_MINUTE`,
+                              `ONE_REQUEST_PER_MINUTE` and `TEN_REQUESTS_PER_MINUTE`
+                            type: string
+                          milliseconds:
+                            description: Response time during any 5-minute period
+                              to trigger an alert, in milliseconds
+                            format: int64
+                            type: integer
+                          sensitivity:
+                            description: Sensitivity of the threshold.  With `low`
+                              sensitivity, high statistical confidence is used. Brief
+                              violations (for example, due to a surge in load) won't
+                              trigger alerts.  With `high` sensitivity, no statistical
+                              confidence is used. Each violation triggers an alert
+                            type: string
+                          slowestMilliseconds:
+                            description: Response time of the 10% slowest during any
+                              5-minute period to trigger an alert, in milliseconds
+                            format: int64
+                            type: integer
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - load
+                        - milliseconds
+                        - sensitivity
+                        - slowestMilliseconds
+                        type: object
+                    type: object
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
