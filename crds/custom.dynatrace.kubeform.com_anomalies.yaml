@@ -1,0 +1,1136 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: anomalies.custom.dynatrace.kubeform.com
+spec:
+  group: custom.dynatrace.kubeform.com
+  names:
+    kind: Anomalies
+    listKind: AnomaliesList
+    plural: anomalies
+    singular: anomalies
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  aggregationType:
+                    description: How the metric data points are aggregated for the
+                      evaluation. The timeseries must support this aggregation
+                    type: string
+                  description:
+                    description: The description of the metric event
+                    type: string
+                  dimensions:
+                    description: Defines the dimensions of the metric to alert on.
+                      The filters are combined by conjunction
+                    items:
+                      properties:
+                        dimension:
+                          description: A generic definition for a filter
+                          items:
+                            properties:
+                              key:
+                                description: The dimensions key on the metric
+                                type: string
+                              type:
+                                description: Defines the actual set of fields depending
+                                  on the value
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - type
+                            type: object
+                          type: array
+                        entity:
+                          description: A filter for the metrics entity dimensions
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              key:
+                                description: The dimensions key on the metric
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        string:
+                          description: A filter for the metrics string dimensions
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              key:
+                                description: The dimensions key on the metric
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  disabledReason:
+                    description: The reason of automatic disabling.  The `NONE` means
+                      config was not disabled automatically. Possible values are `METRIC_DEFINITION_INCONSISTENCY`,
+                      `NONE`, `TOO_MANY_DIMS` and `TOPX_FORCIBLY_DEACTIVATED`
+                    type: string
+                  enabled:
+                    description: The metric event is enabled (`true`) or disabled
+                      (`false`)
+                    type: boolean
+                  id:
+                    type: string
+                  metricID:
+                    description: The ID of the metric evaluated by the metric event
+                    type: string
+                  name:
+                    description: The name of the metric event displayed in the UI
+                    type: string
+                  primaryDimensionKey:
+                    description: Defines which dimension key should be used for the
+                      **alertingScope**
+                    type: string
+                  scopes:
+                    description: Defines the scope of the metric event. Only one filter
+                      is allowed per filter type, except for tags, where up to 3 are
+                      allowed. The filters are combined by conjunction
+                    items:
+                      properties:
+                        customDeviceGroupName:
+                          description: A scope filter for the related custom device
+                            group name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        entity:
+                          description: A scope filter for a monitored entity identifier
+                          items:
+                            properties:
+                              ID:
+                                description: The monitored entities id to match on
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - ID
+                            type: object
+                          type: array
+                        hostGroupName:
+                          description: A scope filter for the related host group name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        hostName:
+                          description: A scope filter for the related host name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        managementZone:
+                          description: A scope filter for a management zone identifier
+                          items:
+                            properties:
+                              ID:
+                                description: The management zone id to match on
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            type: object
+                          type: array
+                        name:
+                          description: A scope filter for a monitored entity name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        processGroupID:
+                          description: A scope filter for a process group identifier
+                          items:
+                            properties:
+                              ID:
+                                description: The process groups id to match on
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - ID
+                            type: object
+                          type: array
+                        processGroupName:
+                          description: A scope filter for the related process group
+                            name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        scope:
+                          description: A generic scope filter
+                          items:
+                            properties:
+                              type:
+                                description: Defines the actual set of fields depending
+                                  on the value
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - type
+                            type: object
+                          type: array
+                        tag:
+                          description: A scope filter for tags on entities
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  context:
+                                    description: The origin of the tag, such as AWS
+                                      or Cloud Foundry. Custom tags use the `CONTEXTLESS`
+                                      value
+                                    type: string
+                                  key:
+                                    description: The key of the tag. Custom tags have
+                                      the tag value here
+                                    type: string
+                                  value:
+                                    description: The value of the tag. Not applicable
+                                      to custom tags
+                                    type: string
+                                required:
+                                - context
+                                - key
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  severity:
+                    description: The type of the event to trigger on the threshold
+                      violation.  The `CUSTOM_ALERT` type is not correlated with other
+                      alerts. The `INFO` type does not open a problem
+                    type: string
+                  strategy:
+                    description: A monitoring strategy for a metric event config.
+                      This is the base version of the monitoring strategy, depending
+                      on the type,  the actual JSON may contain additional fields
+                    properties:
+                      auto:
+                        description: An auto-adaptive baseline strategy to detect
+                          anomalies within metrics that show a regular change over
+                          time, as the baseline is also updated automatically. An
+                          example is to detect an anomaly in the number of received
+                          network packets or within the number of user actions over
+                          time
+                        properties:
+                          alertCondition:
+                            description: 'The condition for the **threshold** value
+                              check: `ABOVE` or `BELOW`'
+                            type: string
+                          alertingOnMissingData:
+                            description: If true, also one-minute samples without
+                              data are counted as violating samples
+                            type: boolean
+                          dealertingSamples:
+                            description: The number of one-minute samples within the
+                              evaluation window that must go back to normal to close
+                              the event
+                            format: int64
+                            type: integer
+                          samples:
+                            description: The number of one-minute samples that form
+                              the sliding evaluation window
+                            format: int64
+                            type: integer
+                          signalFluctuations:
+                            description: Defines the factor of how many signal fluctuations
+                              are valid. Values above the baseline plus the signal
+                              fluctuation times the number of tolerated signal fluctuations
+                              are alerted
+                            format: double
+                            type: number
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                          violatingSamples:
+                            description: The number of one-minute samples within the
+                              evaluation window that must violate the threshold to
+                              trigger an event
+                            format: int64
+                            type: integer
+                        required:
+                        - alertCondition
+                        - dealertingSamples
+                        - samples
+                        - signalFluctuations
+                        - violatingSamples
+                        type: object
+                      generic:
+                        description: A generic monitoring strategy
+                        items:
+                          properties:
+                            type:
+                              description: Defines the actual set of fields depending
+                                on the value
+                              type: string
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          required:
+                          - type
+                          type: object
+                        type: array
+                      static:
+                        description: A static threshold monitoring strategy to alert
+                          on hard limits within a given metric. An example is the
+                          violation of a critical memory limit
+                        properties:
+                          alertCondition:
+                            description: 'The condition for the **threshold** value
+                              check: `ABOVE` or `BELOW`'
+                            type: string
+                          alertingOnMissingData:
+                            description: If true, also one-minute samples without
+                              data are counted as violating samples
+                            type: boolean
+                          dealertingSamples:
+                            description: The number of one-minute samples within the
+                              evaluation window that must go back to normal to close
+                              the event
+                            format: int64
+                            type: integer
+                          samples:
+                            description: The number of one-minute samples that form
+                              the sliding evaluation window
+                            format: int64
+                            type: integer
+                          threshold:
+                            description: The value of the static threshold based on
+                              the specified unit
+                            format: double
+                            type: number
+                          unit:
+                            description: The unit of the threshold, matching the metric
+                              definition
+                            type: string
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                          violatingSamples:
+                            description: The number of one-minute samples within the
+                              evaluation window that must violate the threshold to
+                              trigger an event
+                            format: int64
+                            type: integer
+                        required:
+                        - alertCondition
+                        - dealertingSamples
+                        - samples
+                        - threshold
+                        - unit
+                        - violatingSamples
+                        type: object
+                    type: object
+                  unknowns:
+                    description: allows for configuring properties that are not explicitly
+                      supported by the current version of this provider
+                    type: string
+                  warningReason:
+                    description: The reason of a warning set on the config. The `NONE`
+                      means config has no warnings. The other supported value is `TOO_MANY_DIMS`
+                    type: string
+                required:
+                - description
+                - enabled
+                - metricID
+                - name
+                - strategy
+                type: object
+              state:
+                properties:
+                  aggregationType:
+                    description: How the metric data points are aggregated for the
+                      evaluation. The timeseries must support this aggregation
+                    type: string
+                  description:
+                    description: The description of the metric event
+                    type: string
+                  dimensions:
+                    description: Defines the dimensions of the metric to alert on.
+                      The filters are combined by conjunction
+                    items:
+                      properties:
+                        dimension:
+                          description: A generic definition for a filter
+                          items:
+                            properties:
+                              key:
+                                description: The dimensions key on the metric
+                                type: string
+                              type:
+                                description: Defines the actual set of fields depending
+                                  on the value
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - type
+                            type: object
+                          type: array
+                        entity:
+                          description: A filter for the metrics entity dimensions
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              key:
+                                description: The dimensions key on the metric
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        string:
+                          description: A filter for the metrics string dimensions
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              key:
+                                description: The dimensions key on the metric
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  disabledReason:
+                    description: The reason of automatic disabling.  The `NONE` means
+                      config was not disabled automatically. Possible values are `METRIC_DEFINITION_INCONSISTENCY`,
+                      `NONE`, `TOO_MANY_DIMS` and `TOPX_FORCIBLY_DEACTIVATED`
+                    type: string
+                  enabled:
+                    description: The metric event is enabled (`true`) or disabled
+                      (`false`)
+                    type: boolean
+                  id:
+                    type: string
+                  metricID:
+                    description: The ID of the metric evaluated by the metric event
+                    type: string
+                  name:
+                    description: The name of the metric event displayed in the UI
+                    type: string
+                  primaryDimensionKey:
+                    description: Defines which dimension key should be used for the
+                      **alertingScope**
+                    type: string
+                  scopes:
+                    description: Defines the scope of the metric event. Only one filter
+                      is allowed per filter type, except for tags, where up to 3 are
+                      allowed. The filters are combined by conjunction
+                    items:
+                      properties:
+                        customDeviceGroupName:
+                          description: A scope filter for the related custom device
+                            group name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        entity:
+                          description: A scope filter for a monitored entity identifier
+                          items:
+                            properties:
+                              ID:
+                                description: The monitored entities id to match on
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - ID
+                            type: object
+                          type: array
+                        hostGroupName:
+                          description: A scope filter for the related host group name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        hostName:
+                          description: A scope filter for the related host name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        managementZone:
+                          description: A scope filter for a management zone identifier
+                          items:
+                            properties:
+                              ID:
+                                description: The management zone id to match on
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            type: object
+                          type: array
+                        name:
+                          description: A scope filter for a monitored entity name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        processGroupID:
+                          description: A scope filter for a process group identifier
+                          items:
+                            properties:
+                              ID:
+                                description: The process groups id to match on
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - ID
+                            type: object
+                          type: array
+                        processGroupName:
+                          description: A scope filter for the related process group
+                            name
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  operator:
+                                    description: The operator to match on
+                                    type: string
+                                  value:
+                                    description: The value to match on
+                                    type: string
+                                required:
+                                - operator
+                                - value
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                        scope:
+                          description: A generic scope filter
+                          items:
+                            properties:
+                              type:
+                                description: Defines the actual set of fields depending
+                                  on the value
+                                type: string
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - type
+                            type: object
+                          type: array
+                        tag:
+                          description: A scope filter for tags on entities
+                          items:
+                            properties:
+                              filter:
+                                description: A filter for a string value based on
+                                  the given operator
+                                properties:
+                                  context:
+                                    description: The origin of the tag, such as AWS
+                                      or Cloud Foundry. Custom tags use the `CONTEXTLESS`
+                                      value
+                                    type: string
+                                  key:
+                                    description: The key of the tag. Custom tags have
+                                      the tag value here
+                                    type: string
+                                  value:
+                                    description: The value of the tag. Not applicable
+                                      to custom tags
+                                    type: string
+                                required:
+                                - context
+                                - key
+                                type: object
+                              unknowns:
+                                description: allows for configuring properties that
+                                  are not explicitly supported by the current version
+                                  of this provider
+                                type: string
+                            required:
+                            - filter
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  severity:
+                    description: The type of the event to trigger on the threshold
+                      violation.  The `CUSTOM_ALERT` type is not correlated with other
+                      alerts. The `INFO` type does not open a problem
+                    type: string
+                  strategy:
+                    description: A monitoring strategy for a metric event config.
+                      This is the base version of the monitoring strategy, depending
+                      on the type,  the actual JSON may contain additional fields
+                    properties:
+                      auto:
+                        description: An auto-adaptive baseline strategy to detect
+                          anomalies within metrics that show a regular change over
+                          time, as the baseline is also updated automatically. An
+                          example is to detect an anomaly in the number of received
+                          network packets or within the number of user actions over
+                          time
+                        properties:
+                          alertCondition:
+                            description: 'The condition for the **threshold** value
+                              check: `ABOVE` or `BELOW`'
+                            type: string
+                          alertingOnMissingData:
+                            description: If true, also one-minute samples without
+                              data are counted as violating samples
+                            type: boolean
+                          dealertingSamples:
+                            description: The number of one-minute samples within the
+                              evaluation window that must go back to normal to close
+                              the event
+                            format: int64
+                            type: integer
+                          samples:
+                            description: The number of one-minute samples that form
+                              the sliding evaluation window
+                            format: int64
+                            type: integer
+                          signalFluctuations:
+                            description: Defines the factor of how many signal fluctuations
+                              are valid. Values above the baseline plus the signal
+                              fluctuation times the number of tolerated signal fluctuations
+                              are alerted
+                            format: double
+                            type: number
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                          violatingSamples:
+                            description: The number of one-minute samples within the
+                              evaluation window that must violate the threshold to
+                              trigger an event
+                            format: int64
+                            type: integer
+                        required:
+                        - alertCondition
+                        - dealertingSamples
+                        - samples
+                        - signalFluctuations
+                        - violatingSamples
+                        type: object
+                      generic:
+                        description: A generic monitoring strategy
+                        items:
+                          properties:
+                            type:
+                              description: Defines the actual set of fields depending
+                                on the value
+                              type: string
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          required:
+                          - type
+                          type: object
+                        type: array
+                      static:
+                        description: A static threshold monitoring strategy to alert
+                          on hard limits within a given metric. An example is the
+                          violation of a critical memory limit
+                        properties:
+                          alertCondition:
+                            description: 'The condition for the **threshold** value
+                              check: `ABOVE` or `BELOW`'
+                            type: string
+                          alertingOnMissingData:
+                            description: If true, also one-minute samples without
+                              data are counted as violating samples
+                            type: boolean
+                          dealertingSamples:
+                            description: The number of one-minute samples within the
+                              evaluation window that must go back to normal to close
+                              the event
+                            format: int64
+                            type: integer
+                          samples:
+                            description: The number of one-minute samples that form
+                              the sliding evaluation window
+                            format: int64
+                            type: integer
+                          threshold:
+                            description: The value of the static threshold based on
+                              the specified unit
+                            format: double
+                            type: number
+                          unit:
+                            description: The unit of the threshold, matching the metric
+                              definition
+                            type: string
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                          violatingSamples:
+                            description: The number of one-minute samples within the
+                              evaluation window that must violate the threshold to
+                              trigger an event
+                            format: int64
+                            type: integer
+                        required:
+                        - alertCondition
+                        - dealertingSamples
+                        - samples
+                        - threshold
+                        - unit
+                        - violatingSamples
+                        type: object
+                    type: object
+                  unknowns:
+                    description: allows for configuring properties that are not explicitly
+                      supported by the current version of this provider
+                    type: string
+                  warningReason:
+                    description: The reason of a warning set on the config. The `NONE`
+                      means config has no warnings. The other supported value is `TOO_MANY_DIMS`
+                    type: string
+                required:
+                - description
+                - enabled
+                - metricID
+                - name
+                - strategy
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,1226 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: dashboards.dashboard.dynatrace.kubeform.com
+spec:
+  group: dashboard.dynatrace.kubeform.com
+  names:
+    kind: Dashboard
+    listKind: DashboardList
+    plural: dashboards
+    singular: dashboard
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  dashboardMetadata:
+                    description: contains parameters of a dashboard
+                    properties:
+                      dynamicFilters:
+                        description: Dashboard filter configuration of a dashboard
+                        properties:
+                          filters:
+                            description: "A set of all possible global dashboard filters
+                              that can be applied to a dashboard \n Currently supported
+                              values are: \n \tOS_TYPE, \tSERVICE_TYPE, \tDEPLOYMENT_TYPE,
+                              \tAPPLICATION_INJECTION_TYPE, \tPAAS_VENDOR_TYPE, \tDATABASE_VENDOR,
+                              \tHOST_VIRTUALIZATION_TYPE, \tHOST_MONITORING_MODE,
+                              \tKUBERNETES_CLUSTER, \tRELATED_CLOUD_APPLICATION, \tRELATED_NAMESPACE,
+                              \tTAG_KEY:<tagname>"
+                            items:
+                              type: string
+                            minItems: 1
+                            type: array
+                          tagSuggestionTypes:
+                            description: "A set of entities applied for tag filter
+                              suggestions. You can fetch the list of possible values
+                              with the [GET all entity types](https://dt-url.net/dw03s7h)request.
+                              \n Only applicable if the **filters** set includes `TAG_KEY:<tagname>`"
+                            items:
+                              type: string
+                            minItems: 1
+                            type: array
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - filters
+                        type: object
+                      filter:
+                        description: Global filter Settings for the Dashboard
+                        properties:
+                          managementZone:
+                            description: the management zone this dashboard applies
+                              to
+                            items:
+                              properties:
+                                ID:
+                                  description: the ID of the Dynatrace entity
+                                  type: string
+                                description:
+                                  description: a short description of the Dynatrace
+                                    entity
+                                  type: string
+                                name:
+                                  description: the name of the Dynatrace entity
+                                  type: string
+                                unknowns:
+                                  description: allows for configuring properties that
+                                    are not explicitly supported by the current version
+                                    of this provider
+                                  type: string
+                              required:
+                              - ID
+                              type: object
+                            minItems: 1
+                            type: array
+                          timeframe:
+                            description: the default timeframe of the dashboard
+                            type: string
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        type: object
+                      name:
+                        description: the name of the dashboard
+                        type: string
+                      owner:
+                        description: the owner of the dashboard
+                        type: string
+                      shared:
+                        description: the dashboard is shared (`true`) or private (`false`)
+                        type: boolean
+                      sharingDetails:
+                        description: represents sharing configuration of a dashboard
+                        properties:
+                          linkShared:
+                            description: If `true`, the dashboard is shared via link
+                              and authenticated users with the link can view
+                            type: boolean
+                          published:
+                            description: If `true`, the dashboard is published to
+                              anyone on this environment
+                            type: boolean
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        type: object
+                      tags:
+                        description: a set of tags assigned to the dashboard
+                        items:
+                          type: string
+                        type: array
+                      unknowns:
+                        description: allows for configuring properties that are not
+                          explicitly supported by the current version of this provider
+                        type: string
+                      validFilterKeys:
+                        description: a set of all possible global dashboard filters
+                          that can be applied to dashboard
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - name
+                    type: object
+                  id:
+                    type: string
+                  metadata:
+                    description: '`metadata` exists for backwards compatibility but
+                      shouldn''t get specified anymore Deprecated'
+                    properties:
+                      clusterVersion:
+                        description: Dynatrace server version
+                        type: string
+                      configurationVersions:
+                        description: A Sorted list of the version numbers of the configuration
+                        items:
+                          format: int64
+                          type: integer
+                        type: array
+                      currentConfigurationVersions:
+                        description: A Sorted list of the version numbers of the configuration
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  tile:
+                    description: the tiles this Dashboard consist of
+                    items:
+                      properties:
+                        assignedEntities:
+                          description: The list of Dynatrace entities, assigned to
+                            the tile
+                          items:
+                            type: string
+                          minItems: 1
+                          type: array
+                        bounds:
+                          description: the position and size of a tile
+                          properties:
+                            height:
+                              description: the height of the tile, in pixels
+                              format: int64
+                              type: integer
+                            left:
+                              description: the horizontal distance from the top left
+                                corner of the dashboard to the top left corner of
+                                the tile, in pixels
+                              format: int64
+                              type: integer
+                            top:
+                              description: the vertical distance from the top left
+                                corner of the dashboard to the top left corner of
+                                the tile, in pixels
+                              format: int64
+                              type: integer
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                            width:
+                              description: the width of the tile, in pixels
+                              format: int64
+                              type: integer
+                          required:
+                          - height
+                          - left
+                          - top
+                          - width
+                          type: object
+                        chartVisible:
+                          type: boolean
+                        configured:
+                          description: The tile is configured and ready to use (`true`)
+                            or just placed on the dashboard (`false`)
+                          type: boolean
+                        customName:
+                          description: The name of the tile, set by user
+                          type: string
+                        excludeMaintenanceWindows:
+                          description: Include (`false') or exclude (`true`) maintenance
+                            windows from availability calculations
+                          type: boolean
+                        filter:
+                          description: is filter applied to a tile. It overrides dashboard's
+                            filter
+                          properties:
+                            managementZone:
+                              description: the management zone this tile applies to
+                              items:
+                                properties:
+                                  ID:
+                                    description: the ID of the Dynatrace entity
+                                    type: string
+                                  description:
+                                    description: a short description of the Dynatrace
+                                      entity
+                                    type: string
+                                  name:
+                                    description: the name of the Dynatrace entity
+                                    type: string
+                                  unknowns:
+                                    description: allows for configuring properties
+                                      that are not explicitly supported by the current
+                                      version of this provider
+                                    type: string
+                                required:
+                                - ID
+                                type: object
+                              minItems: 1
+                              type: array
+                            timeframe:
+                              description: the default timeframe of the tile
+                              type: string
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          type: object
+                        filterConfig:
+                          description: the position and size of a tile
+                          properties:
+                            chartConfig:
+                              description: Configuration of a custom chart
+                              properties:
+                                axisLimits:
+                                  additionalProperties:
+                                    format: double
+                                    type: number
+                                  description: The optional custom y-axis limits
+                                  type: object
+                                leftAxisCustomUnit:
+                                  description: Either one of `Bit`, `BitPerHour`,
+                                    `BitPerMinute`, `BitPerSecond`, `Byte`, `BytePerHour`,
+                                    `BytePerMinute`, `BytePerSecond`, `Cores`, `Count`,
+                                    `Day`, `DecibelMilliWatt`, `GibiByte`, `Giga`,
+                                    `GigaByte`, `Hour`, `KibiByte`, `KibiBytePerHour`,
+                                    `KibiBytePerMinute`, `KibiBytePerSecond`, `Kilo`,
+                                    `KiloByte`, `KiloBytePerHour`, `KiloBytePerMinute`,
+                                    `KiloBytePerSecond`, `MebiByte`, `MebiBytePerHour`,
+                                    `MebiBytePerMinute`, `MebiBytePerSecond`, `Mega`,
+                                    `MegaByte`, `MegaBytePerHour`, `MegaBytePerMinute`,
+                                    `MegaBytePerSecond`, `MicroSecond`, `MilliCores`,
+                                    `MilliSecond`, `MilliSecondPerMinute`, `Minute`,
+                                    `Month`, `NanoSecond`, `NanoSecondPerMinute`,
+                                    `NotApplicable`, `PerHour`, `PerMinute`, `PerSecond`,
+                                    `Percent`, `Pixel`, `Promille`, `Ratio`, `Second`,
+                                    `State`, `Unspecified`, `Week`, `Year`
+                                  type: string
+                                legend:
+                                  description: Defines if a legend should be shown
+                                  type: boolean
+                                resultMetadata:
+                                  description: Additional information about charted
+                                    metric
+                                  items:
+                                    properties:
+                                      config:
+                                        description: Additional metadata for charted
+                                          metric
+                                        items:
+                                          properties:
+                                            customColor:
+                                              description: The color of the metric
+                                                in the chart, hex format
+                                              type: string
+                                            key:
+                                              description: A generated key by the
+                                                Dynatrace Server
+                                              type: string
+                                            lastModified:
+                                              description: The timestamp of the last
+                                                metadata modification, in UTC milliseconds
+                                              format: int64
+                                              type: integer
+                                            unknowns:
+                                              description: allows for configuring
+                                                properties that are not explicitly
+                                                supported by the current version of
+                                                this provider
+                                              type: string
+                                          type: object
+                                        minItems: 1
+                                        type: array
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                                rightAxisCustomUnit:
+                                  description: Either one of `Bit`, `BitPerHour`,
+                                    `BitPerMinute`, `BitPerSecond`, `Byte`, `BytePerHour`,
+                                    `BytePerMinute`, `BytePerSecond`, `Cores`, `Count`,
+                                    `Day`, `DecibelMilliWatt`, `GibiByte`, `Giga`,
+                                    `GigaByte`, `Hour`, `KibiByte`, `KibiBytePerHour`,
+                                    `KibiBytePerMinute`, `KibiBytePerSecond`, `Kilo`,
+                                    `KiloByte`, `KiloBytePerHour`, `KiloBytePerMinute`,
+                                    `KiloBytePerSecond`, `MebiByte`, `MebiBytePerHour`,
+                                    `MebiBytePerMinute`, `MebiBytePerSecond`, `Mega`,
+                                    `MegaByte`, `MegaBytePerHour`, `MegaBytePerMinute`,
+                                    `MegaBytePerSecond`, `MicroSecond`, `MilliCores`,
+                                    `MilliSecond`, `MilliSecondPerMinute`, `Minute`,
+                                    `Month`, `NanoSecond`, `NanoSecondPerMinute`,
+                                    `NotApplicable`, `PerHour`, `PerMinute`, `PerSecond`,
+                                    `Percent`, `Pixel`, `Promille`, `Ratio`, `Second`,
+                                    `State`, `Unspecified`, `Week`, `Year`
+                                  type: string
+                                series:
+                                  description: A list of charted metrics
+                                  items:
+                                    properties:
+                                      aggregation:
+                                        description: The charted aggregation of the
+                                          metric
+                                        type: string
+                                      aggregationRate:
+                                        type: string
+                                      dimension:
+                                        description: Configuration of the charted
+                                          metric splitting
+                                        items:
+                                          properties:
+                                            ID:
+                                              description: The ID of the dimension
+                                                by which the metric is split
+                                              type: string
+                                            entityDimension:
+                                              type: boolean
+                                            name:
+                                              description: The name of the dimension
+                                                by which the metric is split
+                                              type: string
+                                            unknowns:
+                                              description: allows for configuring
+                                                properties that are not explicitly
+                                                supported by the current version of
+                                                this provider
+                                              type: string
+                                            values:
+                                              description: The splitting value
+                                              items:
+                                                type: string
+                                              minItems: 1
+                                              type: array
+                                          required:
+                                          - ID
+                                          type: object
+                                        minItems: 1
+                                        type: array
+                                      entityType:
+                                        description: The visualization of the timeseries
+                                          chart
+                                        type: string
+                                      metric:
+                                        description: The name of the charted metric
+                                        type: string
+                                      percentile:
+                                        description: The charted percentile. Only
+                                          applicable if the **aggregation** is set
+                                          to `PERCENTILE`
+                                        format: int64
+                                        type: integer
+                                      sortAscending:
+                                        description: Sort ascending (`true`) or descending
+                                          (`false`)
+                                        type: boolean
+                                      sortColumn:
+                                        description: Sort the column (`true`) or (`false`)
+                                        type: boolean
+                                      type:
+                                        description: The visualization of the timeseries
+                                          chart. Possible values are `AREA`, `BAR`
+                                          and `LINE`.
+                                        type: string
+                                      unknowns:
+                                        description: allows for configuring properties
+                                          that are not explicitly supported by the
+                                          current version of this provider
+                                        type: string
+                                    required:
+                                    - aggregation
+                                    - entityType
+                                    - metric
+                                    - type
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                                type:
+                                  description: The type of the chart
+                                  type: string
+                                unknowns:
+                                  description: allows for configuring properties that
+                                    are not explicitly supported by the current version
+                                    of this provider
+                                  type: string
+                              required:
+                              - type
+                              type: object
+                            customName:
+                              description: The name of the tile, set by user
+                              type: string
+                            defaultName:
+                              description: The default name of the tile
+                              type: string
+                            filters:
+                              description: Configuration of a custom chart
+                              properties:
+                                filter:
+                                  description: the tiles this Dashboard consist of
+                                  items:
+                                    properties:
+                                      entityType:
+                                        description: The entity type (e.g. HOST, SERVICE,
+                                          ...)
+                                        type: string
+                                      match:
+                                        description: the tiles this Dashboard consist
+                                          of
+                                        items:
+                                          properties:
+                                            key:
+                                              description: The entity type (e.g. HOST,
+                                                SERVICE, ...)
+                                              type: string
+                                            values:
+                                              description: the tiles this Dashboard
+                                                consist of
+                                              items:
+                                                type: string
+                                              minItems: 1
+                                              type: array
+                                          required:
+                                          - key
+                                          type: object
+                                        minItems: 1
+                                        type: array
+                                    required:
+                                    - entityType
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                              type: object
+                            type:
+                              description: The type of the filter. Possible values
+                                are `ALB`, `APPLICATION`, `APPLICATION_METHOD`, `APPMON`,
+                                `ASG`, `AWS_CREDENTIALS`, `AWS_CUSTOM_SERVICE`, `AWS_LAMBDA_FUNCTION`,
+                                `CLOUD_APPLICATION`, `CLOUD_APPLICATION_INSTANCE`,
+                                `CLOUD_APPLICATION_NAMESPACE`, `CONTAINER_GROUP_INSTANCE`,
+                                `CUSTOM_APPLICATION`, `CUSTOM_DEVICES`, `CUSTOM_SERVICES`,
+                                `DATABASE`, `DATABASE_KEY_REQUEST`, `DCRUM_APPLICATION`,
+                                `DCRUM_ENTITY`, `DYNAMO_DB`, `EBS`, `EC2`, `ELB`,
+                                `ENVIRONMENT`, `ESXI`, `EXTERNAL_SYNTHETIC_TEST`,
+                                `GLOBAL_BACKGROUND_ACTIVITY`, `HOST`, `IOT`, `KUBERNETES_CLUSTER`,
+                                `KUBERNETES_NODE`, `MDA_SERVICE`, `MIXED`, `MOBILE_APPLICATION`,
+                                `MONITORED_ENTITY`, `NLB`, `PG_BACKGROUND_ACTIVITY`,
+                                `PROBLEM`, `PROCESS_GROUP_INSTANCE`, `RDS`, `REMOTE_PLUGIN`,
+                                `SERVICE`, `SERVICE_KEY_REQUEST`, `SYNTHETIC_BROWSER_MONITOR`,
+                                `SYNTHETIC_HTTPCHECK`, `SYNTHETIC_HTTPCHECK_STEP`,
+                                `SYNTHETIC_LOCATION`, `SYNTHETIC_TEST`, `SYNTHETIC_TEST_STEP`,
+                                `UI_ENTITY`, `VIRTUAL_MACHINE`, `WEB_CHECK`.
+                              type: string
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          required:
+                          - customName
+                          - defaultName
+                          - type
+                          type: object
+                        limit:
+                          description: The limit of the results, if not set will use
+                            the default value of the system
+                          format: int64
+                          type: integer
+                        markdown:
+                          description: The markdown-formatted content of the tile
+                          type: string
+                        metric:
+                          description: The metric assigned to the tile
+                          type: string
+                        name:
+                          description: the name of the tile
+                          type: string
+                        query:
+                          description: A [user session query](https://www.dynatrace.com/support/help/shortlink/usql-info)
+                            executed by the tile
+                          type: string
+                        tileType:
+                          description: the type of the tile. Must be either `APPLICATION_WORLDMAP`,
+                            `RESOURCES`, `THIRD_PARTY_MOST_ACTIVE`, `UEM_CONVERSIONS_PER_GOAL`,
+                            `PROCESS_GROUPS_ONE` or `HOST` .
+                          type: string
+                        timeFrameShift:
+                          description: The comparison timeframe of the query. If specified,
+                            you additionally get the results of the same query with
+                            the specified time shift
+                          type: string
+                        type:
+                          description: The attribute `type` exists for backwards compatibilty.
+                            Usage is discouraged. You should use `visualization` instead.
+                          type: string
+                        unknowns:
+                          description: allows for configuring properties that are
+                            not explicitly supported by the current version of this
+                            provider
+                          type: string
+                        visualization:
+                          description: 'The visualization of the tile. Possible values
+                            are: `COLUMN_CHART`, `FUNNEL`, `LINE_CHART`, `PIE_CHART`,
+                            `SINGLE_VALUE`, `TABLE`'
+                          type: string
+                        visualizationConfig:
+                          description: Configuration of a User session query visualization
+                            tile
+                          properties:
+                            hasAxisBucketing:
+                              description: The axis bucketing when enabled groups
+                                similar series in the same virtual axis
+                              type: boolean
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          type: object
+                      required:
+                      - name
+                      - tileType
+                      type: object
+                    minItems: 1
+                    type: array
+                  unknowns:
+                    description: allows for configuring properties that are not explicitly
+                      supported by the current version of this provider
+                    type: string
+                type: object
+              state:
+                properties:
+                  dashboardMetadata:
+                    description: contains parameters of a dashboard
+                    properties:
+                      dynamicFilters:
+                        description: Dashboard filter configuration of a dashboard
+                        properties:
+                          filters:
+                            description: "A set of all possible global dashboard filters
+                              that can be applied to a dashboard \n Currently supported
+                              values are: \n \tOS_TYPE, \tSERVICE_TYPE, \tDEPLOYMENT_TYPE,
+                              \tAPPLICATION_INJECTION_TYPE, \tPAAS_VENDOR_TYPE, \tDATABASE_VENDOR,
+                              \tHOST_VIRTUALIZATION_TYPE, \tHOST_MONITORING_MODE,
+                              \tKUBERNETES_CLUSTER, \tRELATED_CLOUD_APPLICATION, \tRELATED_NAMESPACE,
+                              \tTAG_KEY:<tagname>"
+                            items:
+                              type: string
+                            minItems: 1
+                            type: array
+                          tagSuggestionTypes:
+                            description: "A set of entities applied for tag filter
+                              suggestions. You can fetch the list of possible values
+                              with the [GET all entity types](https://dt-url.net/dw03s7h)request.
+                              \n Only applicable if the **filters** set includes `TAG_KEY:<tagname>`"
+                            items:
+                              type: string
+                            minItems: 1
+                            type: array
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - filters
+                        type: object
+                      filter:
+                        description: Global filter Settings for the Dashboard
+                        properties:
+                          managementZone:
+                            description: the management zone this dashboard applies
+                              to
+                            items:
+                              properties:
+                                ID:
+                                  description: the ID of the Dynatrace entity
+                                  type: string
+                                description:
+                                  description: a short description of the Dynatrace
+                                    entity
+                                  type: string
+                                name:
+                                  description: the name of the Dynatrace entity
+                                  type: string
+                                unknowns:
+                                  description: allows for configuring properties that
+                                    are not explicitly supported by the current version
+                                    of this provider
+                                  type: string
+                              required:
+                              - ID
+                              type: object
+                            minItems: 1
+                            type: array
+                          timeframe:
+                            description: the default timeframe of the dashboard
+                            type: string
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        type: object
+                      name:
+                        description: the name of the dashboard
+                        type: string
+                      owner:
+                        description: the owner of the dashboard
+                        type: string
+                      shared:
+                        description: the dashboard is shared (`true`) or private (`false`)
+                        type: boolean
+                      sharingDetails:
+                        description: represents sharing configuration of a dashboard
+                        properties:
+                          linkShared:
+                            description: If `true`, the dashboard is shared via link
+                              and authenticated users with the link can view
+                            type: boolean
+                          published:
+                            description: If `true`, the dashboard is published to
+                              anyone on this environment
+                            type: boolean
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        type: object
+                      tags:
+                        description: a set of tags assigned to the dashboard
+                        items:
+                          type: string
+                        type: array
+                      unknowns:
+                        description: allows for configuring properties that are not
+                          explicitly supported by the current version of this provider
+                        type: string
+                      validFilterKeys:
+                        description: a set of all possible global dashboard filters
+                          that can be applied to dashboard
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - name
+                    type: object
+                  id:
+                    type: string
+                  metadata:
+                    description: '`metadata` exists for backwards compatibility but
+                      shouldn''t get specified anymore Deprecated'
+                    properties:
+                      clusterVersion:
+                        description: Dynatrace server version
+                        type: string
+                      configurationVersions:
+                        description: A Sorted list of the version numbers of the configuration
+                        items:
+                          format: int64
+                          type: integer
+                        type: array
+                      currentConfigurationVersions:
+                        description: A Sorted list of the version numbers of the configuration
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  tile:
+                    description: the tiles this Dashboard consist of
+                    items:
+                      properties:
+                        assignedEntities:
+                          description: The list of Dynatrace entities, assigned to
+                            the tile
+                          items:
+                            type: string
+                          minItems: 1
+                          type: array
+                        bounds:
+                          description: the position and size of a tile
+                          properties:
+                            height:
+                              description: the height of the tile, in pixels
+                              format: int64
+                              type: integer
+                            left:
+                              description: the horizontal distance from the top left
+                                corner of the dashboard to the top left corner of
+                                the tile, in pixels
+                              format: int64
+                              type: integer
+                            top:
+                              description: the vertical distance from the top left
+                                corner of the dashboard to the top left corner of
+                                the tile, in pixels
+                              format: int64
+                              type: integer
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                            width:
+                              description: the width of the tile, in pixels
+                              format: int64
+                              type: integer
+                          required:
+                          - height
+                          - left
+                          - top
+                          - width
+                          type: object
+                        chartVisible:
+                          type: boolean
+                        configured:
+                          description: The tile is configured and ready to use (`true`)
+                            or just placed on the dashboard (`false`)
+                          type: boolean
+                        customName:
+                          description: The name of the tile, set by user
+                          type: string
+                        excludeMaintenanceWindows:
+                          description: Include (`false') or exclude (`true`) maintenance
+                            windows from availability calculations
+                          type: boolean
+                        filter:
+                          description: is filter applied to a tile. It overrides dashboard's
+                            filter
+                          properties:
+                            managementZone:
+                              description: the management zone this tile applies to
+                              items:
+                                properties:
+                                  ID:
+                                    description: the ID of the Dynatrace entity
+                                    type: string
+                                  description:
+                                    description: a short description of the Dynatrace
+                                      entity
+                                    type: string
+                                  name:
+                                    description: the name of the Dynatrace entity
+                                    type: string
+                                  unknowns:
+                                    description: allows for configuring properties
+                                      that are not explicitly supported by the current
+                                      version of this provider
+                                    type: string
+                                required:
+                                - ID
+                                type: object
+                              minItems: 1
+                              type: array
+                            timeframe:
+                              description: the default timeframe of the tile
+                              type: string
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          type: object
+                        filterConfig:
+                          description: the position and size of a tile
+                          properties:
+                            chartConfig:
+                              description: Configuration of a custom chart
+                              properties:
+                                axisLimits:
+                                  additionalProperties:
+                                    format: double
+                                    type: number
+                                  description: The optional custom y-axis limits
+                                  type: object
+                                leftAxisCustomUnit:
+                                  description: Either one of `Bit`, `BitPerHour`,
+                                    `BitPerMinute`, `BitPerSecond`, `Byte`, `BytePerHour`,
+                                    `BytePerMinute`, `BytePerSecond`, `Cores`, `Count`,
+                                    `Day`, `DecibelMilliWatt`, `GibiByte`, `Giga`,
+                                    `GigaByte`, `Hour`, `KibiByte`, `KibiBytePerHour`,
+                                    `KibiBytePerMinute`, `KibiBytePerSecond`, `Kilo`,
+                                    `KiloByte`, `KiloBytePerHour`, `KiloBytePerMinute`,
+                                    `KiloBytePerSecond`, `MebiByte`, `MebiBytePerHour`,
+                                    `MebiBytePerMinute`, `MebiBytePerSecond`, `Mega`,
+                                    `MegaByte`, `MegaBytePerHour`, `MegaBytePerMinute`,
+                                    `MegaBytePerSecond`, `MicroSecond`, `MilliCores`,
+                                    `MilliSecond`, `MilliSecondPerMinute`, `Minute`,
+                                    `Month`, `NanoSecond`, `NanoSecondPerMinute`,
+                                    `NotApplicable`, `PerHour`, `PerMinute`, `PerSecond`,
+                                    `Percent`, `Pixel`, `Promille`, `Ratio`, `Second`,
+                                    `State`, `Unspecified`, `Week`, `Year`
+                                  type: string
+                                legend:
+                                  description: Defines if a legend should be shown
+                                  type: boolean
+                                resultMetadata:
+                                  description: Additional information about charted
+                                    metric
+                                  items:
+                                    properties:
+                                      config:
+                                        description: Additional metadata for charted
+                                          metric
+                                        items:
+                                          properties:
+                                            customColor:
+                                              description: The color of the metric
+                                                in the chart, hex format
+                                              type: string
+                                            key:
+                                              description: A generated key by the
+                                                Dynatrace Server
+                                              type: string
+                                            lastModified:
+                                              description: The timestamp of the last
+                                                metadata modification, in UTC milliseconds
+                                              format: int64
+                                              type: integer
+                                            unknowns:
+                                              description: allows for configuring
+                                                properties that are not explicitly
+                                                supported by the current version of
+                                                this provider
+                                              type: string
+                                          type: object
+                                        minItems: 1
+                                        type: array
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                                rightAxisCustomUnit:
+                                  description: Either one of `Bit`, `BitPerHour`,
+                                    `BitPerMinute`, `BitPerSecond`, `Byte`, `BytePerHour`,
+                                    `BytePerMinute`, `BytePerSecond`, `Cores`, `Count`,
+                                    `Day`, `DecibelMilliWatt`, `GibiByte`, `Giga`,
+                                    `GigaByte`, `Hour`, `KibiByte`, `KibiBytePerHour`,
+                                    `KibiBytePerMinute`, `KibiBytePerSecond`, `Kilo`,
+                                    `KiloByte`, `KiloBytePerHour`, `KiloBytePerMinute`,
+                                    `KiloBytePerSecond`, `MebiByte`, `MebiBytePerHour`,
+                                    `MebiBytePerMinute`, `MebiBytePerSecond`, `Mega`,
+                                    `MegaByte`, `MegaBytePerHour`, `MegaBytePerMinute`,
+                                    `MegaBytePerSecond`, `MicroSecond`, `MilliCores`,
+                                    `MilliSecond`, `MilliSecondPerMinute`, `Minute`,
+                                    `Month`, `NanoSecond`, `NanoSecondPerMinute`,
+                                    `NotApplicable`, `PerHour`, `PerMinute`, `PerSecond`,
+                                    `Percent`, `Pixel`, `Promille`, `Ratio`, `Second`,
+                                    `State`, `Unspecified`, `Week`, `Year`
+                                  type: string
+                                series:
+                                  description: A list of charted metrics
+                                  items:
+                                    properties:
+                                      aggregation:
+                                        description: The charted aggregation of the
+                                          metric
+                                        type: string
+                                      aggregationRate:
+                                        type: string
+                                      dimension:
+                                        description: Configuration of the charted
+                                          metric splitting
+                                        items:
+                                          properties:
+                                            ID:
+                                              description: The ID of the dimension
+                                                by which the metric is split
+                                              type: string
+                                            entityDimension:
+                                              type: boolean
+                                            name:
+                                              description: The name of the dimension
+                                                by which the metric is split
+                                              type: string
+                                            unknowns:
+                                              description: allows for configuring
+                                                properties that are not explicitly
+                                                supported by the current version of
+                                                this provider
+                                              type: string
+                                            values:
+                                              description: The splitting value
+                                              items:
+                                                type: string
+                                              minItems: 1
+                                              type: array
+                                          required:
+                                          - ID
+                                          type: object
+                                        minItems: 1
+                                        type: array
+                                      entityType:
+                                        description: The visualization of the timeseries
+                                          chart
+                                        type: string
+                                      metric:
+                                        description: The name of the charted metric
+                                        type: string
+                                      percentile:
+                                        description: The charted percentile. Only
+                                          applicable if the **aggregation** is set
+                                          to `PERCENTILE`
+                                        format: int64
+                                        type: integer
+                                      sortAscending:
+                                        description: Sort ascending (`true`) or descending
+                                          (`false`)
+                                        type: boolean
+                                      sortColumn:
+                                        description: Sort the column (`true`) or (`false`)
+                                        type: boolean
+                                      type:
+                                        description: The visualization of the timeseries
+                                          chart. Possible values are `AREA`, `BAR`
+                                          and `LINE`.
+                                        type: string
+                                      unknowns:
+                                        description: allows for configuring properties
+                                          that are not explicitly supported by the
+                                          current version of this provider
+                                        type: string
+                                    required:
+                                    - aggregation
+                                    - entityType
+                                    - metric
+                                    - type
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                                type:
+                                  description: The type of the chart
+                                  type: string
+                                unknowns:
+                                  description: allows for configuring properties that
+                                    are not explicitly supported by the current version
+                                    of this provider
+                                  type: string
+                              required:
+                              - type
+                              type: object
+                            customName:
+                              description: The name of the tile, set by user
+                              type: string
+                            defaultName:
+                              description: The default name of the tile
+                              type: string
+                            filters:
+                              description: Configuration of a custom chart
+                              properties:
+                                filter:
+                                  description: the tiles this Dashboard consist of
+                                  items:
+                                    properties:
+                                      entityType:
+                                        description: The entity type (e.g. HOST, SERVICE,
+                                          ...)
+                                        type: string
+                                      match:
+                                        description: the tiles this Dashboard consist
+                                          of
+                                        items:
+                                          properties:
+                                            key:
+                                              description: The entity type (e.g. HOST,
+                                                SERVICE, ...)
+                                              type: string
+                                            values:
+                                              description: the tiles this Dashboard
+                                                consist of
+                                              items:
+                                                type: string
+                                              minItems: 1
+                                              type: array
+                                          required:
+                                          - key
+                                          type: object
+                                        minItems: 1
+                                        type: array
+                                    required:
+                                    - entityType
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                              type: object
+                            type:
+                              description: The type of the filter. Possible values
+                                are `ALB`, `APPLICATION`, `APPLICATION_METHOD`, `APPMON`,
+                                `ASG`, `AWS_CREDENTIALS`, `AWS_CUSTOM_SERVICE`, `AWS_LAMBDA_FUNCTION`,
+                                `CLOUD_APPLICATION`, `CLOUD_APPLICATION_INSTANCE`,
+                                `CLOUD_APPLICATION_NAMESPACE`, `CONTAINER_GROUP_INSTANCE`,
+                                `CUSTOM_APPLICATION`, `CUSTOM_DEVICES`, `CUSTOM_SERVICES`,
+                                `DATABASE`, `DATABASE_KEY_REQUEST`, `DCRUM_APPLICATION`,
+                                `DCRUM_ENTITY`, `DYNAMO_DB`, `EBS`, `EC2`, `ELB`,
+                                `ENVIRONMENT`, `ESXI`, `EXTERNAL_SYNTHETIC_TEST`,
+                                `GLOBAL_BACKGROUND_ACTIVITY`, `HOST`, `IOT`, `KUBERNETES_CLUSTER`,
+                                `KUBERNETES_NODE`, `MDA_SERVICE`, `MIXED`, `MOBILE_APPLICATION`,
+                                `MONITORED_ENTITY`, `NLB`, `PG_BACKGROUND_ACTIVITY`,
+                                `PROBLEM`, `PROCESS_GROUP_INSTANCE`, `RDS`, `REMOTE_PLUGIN`,
+                                `SERVICE`, `SERVICE_KEY_REQUEST`, `SYNTHETIC_BROWSER_MONITOR`,
+                                `SYNTHETIC_HTTPCHECK`, `SYNTHETIC_HTTPCHECK_STEP`,
+                                `SYNTHETIC_LOCATION`, `SYNTHETIC_TEST`, `SYNTHETIC_TEST_STEP`,
+                                `UI_ENTITY`, `VIRTUAL_MACHINE`, `WEB_CHECK`.
+                              type: string
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          required:
+                          - customName
+                          - defaultName
+                          - type
+                          type: object
+                        limit:
+                          description: The limit of the results, if not set will use
+                            the default value of the system
+                          format: int64
+                          type: integer
+                        markdown:
+                          description: The markdown-formatted content of the tile
+                          type: string
+                        metric:
+                          description: The metric assigned to the tile
+                          type: string
+                        name:
+                          description: the name of the tile
+                          type: string
+                        query:
+                          description: A [user session query](https://www.dynatrace.com/support/help/shortlink/usql-info)
+                            executed by the tile
+                          type: string
+                        tileType:
+                          description: the type of the tile. Must be either `APPLICATION_WORLDMAP`,
+                            `RESOURCES`, `THIRD_PARTY_MOST_ACTIVE`, `UEM_CONVERSIONS_PER_GOAL`,
+                            `PROCESS_GROUPS_ONE` or `HOST` .
+                          type: string
+                        timeFrameShift:
+                          description: The comparison timeframe of the query. If specified,
+                            you additionally get the results of the same query with
+                            the specified time shift
+                          type: string
+                        type:
+                          description: The attribute `type` exists for backwards compatibilty.
+                            Usage is discouraged. You should use `visualization` instead.
+                          type: string
+                        unknowns:
+                          description: allows for configuring properties that are
+                            not explicitly supported by the current version of this
+                            provider
+                          type: string
+                        visualization:
+                          description: 'The visualization of the tile. Possible values
+                            are: `COLUMN_CHART`, `FUNNEL`, `LINE_CHART`, `PIE_CHART`,
+                            `SINGLE_VALUE`, `TABLE`'
+                          type: string
+                        visualizationConfig:
+                          description: Configuration of a User session query visualization
+                            tile
+                          properties:
+                            hasAxisBucketing:
+                              description: The axis bucketing when enabled groups
+                                similar series in the same virtual axis
+                              type: boolean
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          type: object
+                      required:
+                      - name
+                      - tileType
+                      type: object
+                    minItems: 1
+                    type: array
+                  unknowns:
+                    description: allows for configuring properties that are not explicitly
+                      supported by the current version of this provider
+                    type: string
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

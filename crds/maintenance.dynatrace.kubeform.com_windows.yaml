@@ -1,0 +1,500 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: windows.maintenance.dynatrace.kubeform.com
+spec:
+  group: maintenance.dynatrace.kubeform.com
+  names:
+    kind: Window
+    listKind: WindowList
+    plural: windows
+    singular: window
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  description:
+                    description: A short description of the maintenance purpose
+                    type: string
+                  id:
+                    type: string
+                  metadata:
+                    description: '`metadata` exists for backwards compatibility but
+                      shouldn''t get specified anymore Deprecated'
+                    properties:
+                      clusterVersion:
+                        description: Dynatrace server version
+                        type: string
+                      configurationVersions:
+                        description: A Sorted list of the version numbers of the configuration
+                        items:
+                          format: int64
+                          type: integer
+                        type: array
+                      currentConfigurationVersions:
+                        description: A Sorted list of the version numbers of the configuration
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  name:
+                    description: The name of the maintenance window, displayed in
+                      the UI
+                    type: string
+                  schedule:
+                    description: The schedule of the maintenance window
+                    properties:
+                      end:
+                        description: The end date and time of the maintenance window
+                          validity period in yyyy-mm-dd HH:mm format
+                        type: string
+                      recurrence:
+                        description: The recurrence of the maintenance window
+                        properties:
+                          dayOfMonth:
+                            description: The day of the month for monthly maintenance.  The
+                              value of `31` is treated as the last day of the month
+                              for months that don't have a 31st day. The value of
+                              `30` is also treated as the last day of the month for
+                              February
+                            format: int64
+                            type: integer
+                          dayOfWeek:
+                            description: The day of the week for weekly maintenance.  The
+                              format is the full name of the day in upper case, for
+                              example `THURSDAY`
+                            type: string
+                          durationMinutes:
+                            description: The duration of the maintenance window in
+                              minutes
+                            format: int64
+                            type: integer
+                          startTime:
+                            description: The start time of the maintenance window
+                              in HH:mm format
+                            type: string
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - durationMinutes
+                        - startTime
+                        type: object
+                      recurrenceType:
+                        description: The type of the schedule recurrence. Possible
+                          values are `DAILY`, `MONTHLY`, `ONCE` and `WEEKLY`
+                        type: string
+                      start:
+                        description: The start date and time of the maintenance window
+                          validity period in yyyy-mm-dd HH:mm format
+                        type: string
+                      unknowns:
+                        description: allows for configuring properties that are not
+                          explicitly supported by the current version of this provider
+                        type: string
+                      zoneID:
+                        description: The time zone of the start and end time. Default
+                          time zone is UTC. You can use either UTC offset `UTC+01:00`
+                          format or the IANA Time Zone Database format (for example,
+                          `Europe/Vienna`)
+                        type: string
+                    required:
+                    - end
+                    - recurrenceType
+                    - start
+                    - zoneID
+                    type: object
+                  scope:
+                    description: the tiles this Dashboard consist of
+                    properties:
+                      entities:
+                        description: A list of Dynatrace entities (for example, hosts
+                          or services) to be included in the scope.  Allowed values
+                          are Dynatrace entity IDs
+                        items:
+                          type: string
+                        type: array
+                      matches:
+                        description: A list of matching rules for dynamic scope formation.  If
+                          several rules are set, the OR logic applies
+                        items:
+                          properties:
+                            mzID:
+                              description: The ID of a management zone to which the
+                                matched entities must belong
+                              type: string
+                            tagCombination:
+                              description: 'The logic that applies when several tags
+                                are specified: AND/OR.  If not set, the OR logic is
+                                used'
+                              type: string
+                            tags:
+                              description: The tag you want to use for matching.  You
+                                can use custom tags from the UI, AWS tags, Cloud Foundry
+                                tags, OpenShift/Kubernetes, and tags based on environment
+                                variables
+                              items:
+                                properties:
+                                  context:
+                                    description: The origin of the tag, such as AWS
+                                      or Cloud Foundry. Custom tags use the `CONTEXTLESS`
+                                      value
+                                    type: string
+                                  key:
+                                    description: The key of the tag. Custom tags have
+                                      the tag value here
+                                    type: string
+                                  unknowns:
+                                    description: allows for configuring properties
+                                      that are not explicitly supported by the current
+                                      version of this provider
+                                    type: string
+                                  value:
+                                    description: The value of the tag. Not applicable
+                                      to custom tags
+                                    type: string
+                                required:
+                                - context
+                                - key
+                                type: object
+                              minItems: 1
+                              type: array
+                            type:
+                              description: The type of the Dynatrace entities (for
+                                example, hosts or services) you want to pick up by
+                                matching
+                              type: string
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          type: object
+                        minItems: 1
+                        type: array
+                      unknowns:
+                        description: allows for configuring properties that are not
+                          explicitly supported by the current version of this provider
+                        type: string
+                    type: object
+                  suppressSynthMonExec:
+                    description: Suppress execution of synthetic monitors during the
+                      maintenance
+                    type: boolean
+                  suppression:
+                    description: The type of suppression of alerting and problem detection
+                      during the maintenance
+                    type: string
+                  type:
+                    description: 'The type of the maintenance: planned or unplanned'
+                    type: string
+                  unknowns:
+                    description: allows for configuring properties that are not explicitly
+                      supported by the current version of this provider
+                    type: string
+                required:
+                - name
+                - suppression
+                - type
+                type: object
+              state:
+                properties:
+                  description:
+                    description: A short description of the maintenance purpose
+                    type: string
+                  id:
+                    type: string
+                  metadata:
+                    description: '`metadata` exists for backwards compatibility but
+                      shouldn''t get specified anymore Deprecated'
+                    properties:
+                      clusterVersion:
+                        description: Dynatrace server version
+                        type: string
+                      configurationVersions:
+                        description: A Sorted list of the version numbers of the configuration
+                        items:
+                          format: int64
+                          type: integer
+                        type: array
+                      currentConfigurationVersions:
+                        description: A Sorted list of the version numbers of the configuration
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  name:
+                    description: The name of the maintenance window, displayed in
+                      the UI
+                    type: string
+                  schedule:
+                    description: The schedule of the maintenance window
+                    properties:
+                      end:
+                        description: The end date and time of the maintenance window
+                          validity period in yyyy-mm-dd HH:mm format
+                        type: string
+                      recurrence:
+                        description: The recurrence of the maintenance window
+                        properties:
+                          dayOfMonth:
+                            description: The day of the month for monthly maintenance.  The
+                              value of `31` is treated as the last day of the month
+                              for months that don't have a 31st day. The value of
+                              `30` is also treated as the last day of the month for
+                              February
+                            format: int64
+                            type: integer
+                          dayOfWeek:
+                            description: The day of the week for weekly maintenance.  The
+                              format is the full name of the day in upper case, for
+                              example `THURSDAY`
+                            type: string
+                          durationMinutes:
+                            description: The duration of the maintenance window in
+                              minutes
+                            format: int64
+                            type: integer
+                          startTime:
+                            description: The start time of the maintenance window
+                              in HH:mm format
+                            type: string
+                          unknowns:
+                            description: allows for configuring properties that are
+                              not explicitly supported by the current version of this
+                              provider
+                            type: string
+                        required:
+                        - durationMinutes
+                        - startTime
+                        type: object
+                      recurrenceType:
+                        description: The type of the schedule recurrence. Possible
+                          values are `DAILY`, `MONTHLY`, `ONCE` and `WEEKLY`
+                        type: string
+                      start:
+                        description: The start date and time of the maintenance window
+                          validity period in yyyy-mm-dd HH:mm format
+                        type: string
+                      unknowns:
+                        description: allows for configuring properties that are not
+                          explicitly supported by the current version of this provider
+                        type: string
+                      zoneID:
+                        description: The time zone of the start and end time. Default
+                          time zone is UTC. You can use either UTC offset `UTC+01:00`
+                          format or the IANA Time Zone Database format (for example,
+                          `Europe/Vienna`)
+                        type: string
+                    required:
+                    - end
+                    - recurrenceType
+                    - start
+                    - zoneID
+                    type: object
+                  scope:
+                    description: the tiles this Dashboard consist of
+                    properties:
+                      entities:
+                        description: A list of Dynatrace entities (for example, hosts
+                          or services) to be included in the scope.  Allowed values
+                          are Dynatrace entity IDs
+                        items:
+                          type: string
+                        type: array
+                      matches:
+                        description: A list of matching rules for dynamic scope formation.  If
+                          several rules are set, the OR logic applies
+                        items:
+                          properties:
+                            mzID:
+                              description: The ID of a management zone to which the
+                                matched entities must belong
+                              type: string
+                            tagCombination:
+                              description: 'The logic that applies when several tags
+                                are specified: AND/OR.  If not set, the OR logic is
+                                used'
+                              type: string
+                            tags:
+                              description: The tag you want to use for matching.  You
+                                can use custom tags from the UI, AWS tags, Cloud Foundry
+                                tags, OpenShift/Kubernetes, and tags based on environment
+                                variables
+                              items:
+                                properties:
+                                  context:
+                                    description: The origin of the tag, such as AWS
+                                      or Cloud Foundry. Custom tags use the `CONTEXTLESS`
+                                      value
+                                    type: string
+                                  key:
+                                    description: The key of the tag. Custom tags have
+                                      the tag value here
+                                    type: string
+                                  unknowns:
+                                    description: allows for configuring properties
+                                      that are not explicitly supported by the current
+                                      version of this provider
+                                    type: string
+                                  value:
+                                    description: The value of the tag. Not applicable
+                                      to custom tags
+                                    type: string
+                                required:
+                                - context
+                                - key
+                                type: object
+                              minItems: 1
+                              type: array
+                            type:
+                              description: The type of the Dynatrace entities (for
+                                example, hosts or services) you want to pick up by
+                                matching
+                              type: string
+                            unknowns:
+                              description: allows for configuring properties that
+                                are not explicitly supported by the current version
+                                of this provider
+                              type: string
+                          type: object
+                        minItems: 1
+                        type: array
+                      unknowns:
+                        description: allows for configuring properties that are not
+                          explicitly supported by the current version of this provider
+                        type: string
+                    type: object
+                  suppressSynthMonExec:
+                    description: Suppress execution of synthetic monitors during the
+                      maintenance
+                    type: boolean
+                  suppression:
+                    description: The type of suppression of alerting and problem detection
+                      during the maintenance
+                    type: string
+                  type:
+                    description: 'The type of the maintenance: planned or unplanned'
+                    type: string
+                  unknowns:
+                    description: allows for configuring properties that are not explicitly
+                      supported by the current version of this provider
+                    type: string
+                required:
+                - name
+                - suppression
+                - type
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
