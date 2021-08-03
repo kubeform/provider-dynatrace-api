@@ -3,7 +3,7 @@
 
 # provider-dynatrace-api
 
-Kubeform CRDs for [Terraform Dynatrace Provider](https://github.com/dynatrace/terraform-provider-dynatrace)
+Kubeform CRDs for [Terraform Dynatrace Provider](https://github.com/dynatrace-oss/terraform-provider-dynatrace)
 
 ## Installation
 
