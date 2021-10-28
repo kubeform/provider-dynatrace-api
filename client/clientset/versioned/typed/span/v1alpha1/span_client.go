@@ -27,6 +27,7 @@ import (
 
 type SpanV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	AttributesGetter
 	CaptureRulesGetter
 	ContextPropagationsGetter
 	EntryPointsGetter
@@ -35,6 +36,10 @@ type SpanV1alpha1Interface interface {
 // SpanV1alpha1Client is used to interact with features provided by the span.dynatrace.kubeform.com group.
 type SpanV1alpha1Client struct {
 	restClient rest.Interface
+}
+
+func (c *SpanV1alpha1Client) Attributes(namespace string) AttributeInterface {
+	return newAttributes(c, namespace)
 }
 
 func (c *SpanV1alpha1Client) CaptureRules(namespace string) CaptureRuleInterface {

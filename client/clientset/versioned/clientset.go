@@ -26,15 +26,19 @@ import (
 	autotagv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/autotag/v1alpha1"
 	awsv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/aws/v1alpha1"
 	azurev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/azure/v1alpha1"
+	browserv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/browser/v1alpha1"
 	calculatedv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/calculated/v1alpha1"
 	customv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/custom/v1alpha1"
 	dashboardv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/dashboard/v1alpha1"
 	databasev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/database/v1alpha1"
 	diskv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/disk/v1alpha1"
+	environmentv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/environment/v1alpha1"
 	hostv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/host/v1alpha1"
+	httpv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/http/v1alpha1"
 	k8sv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/k8s/v1alpha1"
 	maintenancev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/maintenance/v1alpha1"
 	managementv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/management/v1alpha1"
+	mobilev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/mobile/v1alpha1"
 	notificationv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/notification/v1alpha1"
 	processgroupv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/processgroup/v1alpha1"
 	requestv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/request/v1alpha1"
@@ -55,15 +59,19 @@ type Interface interface {
 	AutotagV1alpha1() autotagv1alpha1.AutotagV1alpha1Interface
 	AwsV1alpha1() awsv1alpha1.AwsV1alpha1Interface
 	AzureV1alpha1() azurev1alpha1.AzureV1alpha1Interface
+	BrowserV1alpha1() browserv1alpha1.BrowserV1alpha1Interface
 	CalculatedV1alpha1() calculatedv1alpha1.CalculatedV1alpha1Interface
 	CustomV1alpha1() customv1alpha1.CustomV1alpha1Interface
 	DashboardV1alpha1() dashboardv1alpha1.DashboardV1alpha1Interface
 	DatabaseV1alpha1() databasev1alpha1.DatabaseV1alpha1Interface
 	DiskV1alpha1() diskv1alpha1.DiskV1alpha1Interface
+	EnvironmentV1alpha1() environmentv1alpha1.EnvironmentV1alpha1Interface
 	HostV1alpha1() hostv1alpha1.HostV1alpha1Interface
+	HttpV1alpha1() httpv1alpha1.HttpV1alpha1Interface
 	K8sV1alpha1() k8sv1alpha1.K8sV1alpha1Interface
 	MaintenanceV1alpha1() maintenancev1alpha1.MaintenanceV1alpha1Interface
 	ManagementV1alpha1() managementv1alpha1.ManagementV1alpha1Interface
+	MobileV1alpha1() mobilev1alpha1.MobileV1alpha1Interface
 	NotificationV1alpha1() notificationv1alpha1.NotificationV1alpha1Interface
 	ProcessgroupV1alpha1() processgroupv1alpha1.ProcessgroupV1alpha1Interface
 	RequestV1alpha1() requestv1alpha1.RequestV1alpha1Interface
@@ -82,15 +90,19 @@ type Clientset struct {
 	autotagV1alpha1      *autotagv1alpha1.AutotagV1alpha1Client
 	awsV1alpha1          *awsv1alpha1.AwsV1alpha1Client
 	azureV1alpha1        *azurev1alpha1.AzureV1alpha1Client
+	browserV1alpha1      *browserv1alpha1.BrowserV1alpha1Client
 	calculatedV1alpha1   *calculatedv1alpha1.CalculatedV1alpha1Client
 	customV1alpha1       *customv1alpha1.CustomV1alpha1Client
 	dashboardV1alpha1    *dashboardv1alpha1.DashboardV1alpha1Client
 	databaseV1alpha1     *databasev1alpha1.DatabaseV1alpha1Client
 	diskV1alpha1         *diskv1alpha1.DiskV1alpha1Client
+	environmentV1alpha1  *environmentv1alpha1.EnvironmentV1alpha1Client
 	hostV1alpha1         *hostv1alpha1.HostV1alpha1Client
+	httpV1alpha1         *httpv1alpha1.HttpV1alpha1Client
 	k8sV1alpha1          *k8sv1alpha1.K8sV1alpha1Client
 	maintenanceV1alpha1  *maintenancev1alpha1.MaintenanceV1alpha1Client
 	managementV1alpha1   *managementv1alpha1.ManagementV1alpha1Client
+	mobileV1alpha1       *mobilev1alpha1.MobileV1alpha1Client
 	notificationV1alpha1 *notificationv1alpha1.NotificationV1alpha1Client
 	processgroupV1alpha1 *processgroupv1alpha1.ProcessgroupV1alpha1Client
 	requestV1alpha1      *requestv1alpha1.RequestV1alpha1Client
@@ -125,6 +137,11 @@ func (c *Clientset) AzureV1alpha1() azurev1alpha1.AzureV1alpha1Interface {
 	return c.azureV1alpha1
 }
 
+// BrowserV1alpha1 retrieves the BrowserV1alpha1Client
+func (c *Clientset) BrowserV1alpha1() browserv1alpha1.BrowserV1alpha1Interface {
+	return c.browserV1alpha1
+}
+
 // CalculatedV1alpha1 retrieves the CalculatedV1alpha1Client
 func (c *Clientset) CalculatedV1alpha1() calculatedv1alpha1.CalculatedV1alpha1Interface {
 	return c.calculatedV1alpha1
@@ -150,9 +167,19 @@ func (c *Clientset) DiskV1alpha1() diskv1alpha1.DiskV1alpha1Interface {
 	return c.diskV1alpha1
 }
 
+// EnvironmentV1alpha1 retrieves the EnvironmentV1alpha1Client
+func (c *Clientset) EnvironmentV1alpha1() environmentv1alpha1.EnvironmentV1alpha1Interface {
+	return c.environmentV1alpha1
+}
+
 // HostV1alpha1 retrieves the HostV1alpha1Client
 func (c *Clientset) HostV1alpha1() hostv1alpha1.HostV1alpha1Interface {
 	return c.hostV1alpha1
+}
+
+// HttpV1alpha1 retrieves the HttpV1alpha1Client
+func (c *Clientset) HttpV1alpha1() httpv1alpha1.HttpV1alpha1Interface {
+	return c.httpV1alpha1
 }
 
 // K8sV1alpha1 retrieves the K8sV1alpha1Client
@@ -168,6 +195,11 @@ func (c *Clientset) MaintenanceV1alpha1() maintenancev1alpha1.MaintenanceV1alpha
 // ManagementV1alpha1 retrieves the ManagementV1alpha1Client
 func (c *Clientset) ManagementV1alpha1() managementv1alpha1.ManagementV1alpha1Interface {
 	return c.managementV1alpha1
+}
+
+// MobileV1alpha1 retrieves the MobileV1alpha1Client
+func (c *Clientset) MobileV1alpha1() mobilev1alpha1.MobileV1alpha1Interface {
+	return c.mobileV1alpha1
 }
 
 // NotificationV1alpha1 retrieves the NotificationV1alpha1Client
@@ -246,6 +278,10 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	if err != nil {
 		return nil, err
 	}
+	cs.browserV1alpha1, err = browserv1alpha1.NewForConfig(&configShallowCopy)
+	if err != nil {
+		return nil, err
+	}
 	cs.calculatedV1alpha1, err = calculatedv1alpha1.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
@@ -266,7 +302,15 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	if err != nil {
 		return nil, err
 	}
+	cs.environmentV1alpha1, err = environmentv1alpha1.NewForConfig(&configShallowCopy)
+	if err != nil {
+		return nil, err
+	}
 	cs.hostV1alpha1, err = hostv1alpha1.NewForConfig(&configShallowCopy)
+	if err != nil {
+		return nil, err
+	}
+	cs.httpV1alpha1, err = httpv1alpha1.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
 	}
@@ -279,6 +323,10 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 		return nil, err
 	}
 	cs.managementV1alpha1, err = managementv1alpha1.NewForConfig(&configShallowCopy)
+	if err != nil {
+		return nil, err
+	}
+	cs.mobileV1alpha1, err = mobilev1alpha1.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
 	}
@@ -327,15 +375,19 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 	cs.autotagV1alpha1 = autotagv1alpha1.NewForConfigOrDie(c)
 	cs.awsV1alpha1 = awsv1alpha1.NewForConfigOrDie(c)
 	cs.azureV1alpha1 = azurev1alpha1.NewForConfigOrDie(c)
+	cs.browserV1alpha1 = browserv1alpha1.NewForConfigOrDie(c)
 	cs.calculatedV1alpha1 = calculatedv1alpha1.NewForConfigOrDie(c)
 	cs.customV1alpha1 = customv1alpha1.NewForConfigOrDie(c)
 	cs.dashboardV1alpha1 = dashboardv1alpha1.NewForConfigOrDie(c)
 	cs.databaseV1alpha1 = databasev1alpha1.NewForConfigOrDie(c)
 	cs.diskV1alpha1 = diskv1alpha1.NewForConfigOrDie(c)
+	cs.environmentV1alpha1 = environmentv1alpha1.NewForConfigOrDie(c)
 	cs.hostV1alpha1 = hostv1alpha1.NewForConfigOrDie(c)
+	cs.httpV1alpha1 = httpv1alpha1.NewForConfigOrDie(c)
 	cs.k8sV1alpha1 = k8sv1alpha1.NewForConfigOrDie(c)
 	cs.maintenanceV1alpha1 = maintenancev1alpha1.NewForConfigOrDie(c)
 	cs.managementV1alpha1 = managementv1alpha1.NewForConfigOrDie(c)
+	cs.mobileV1alpha1 = mobilev1alpha1.NewForConfigOrDie(c)
 	cs.notificationV1alpha1 = notificationv1alpha1.NewForConfigOrDie(c)
 	cs.processgroupV1alpha1 = processgroupv1alpha1.NewForConfigOrDie(c)
 	cs.requestV1alpha1 = requestv1alpha1.NewForConfigOrDie(c)
@@ -356,15 +408,19 @@ func New(c rest.Interface) *Clientset {
 	cs.autotagV1alpha1 = autotagv1alpha1.New(c)
 	cs.awsV1alpha1 = awsv1alpha1.New(c)
 	cs.azureV1alpha1 = azurev1alpha1.New(c)
+	cs.browserV1alpha1 = browserv1alpha1.New(c)
 	cs.calculatedV1alpha1 = calculatedv1alpha1.New(c)
 	cs.customV1alpha1 = customv1alpha1.New(c)
 	cs.dashboardV1alpha1 = dashboardv1alpha1.New(c)
 	cs.databaseV1alpha1 = databasev1alpha1.New(c)
 	cs.diskV1alpha1 = diskv1alpha1.New(c)
+	cs.environmentV1alpha1 = environmentv1alpha1.New(c)
 	cs.hostV1alpha1 = hostv1alpha1.New(c)
+	cs.httpV1alpha1 = httpv1alpha1.New(c)
 	cs.k8sV1alpha1 = k8sv1alpha1.New(c)
 	cs.maintenanceV1alpha1 = maintenancev1alpha1.New(c)
 	cs.managementV1alpha1 = managementv1alpha1.New(c)
+	cs.mobileV1alpha1 = mobilev1alpha1.New(c)
 	cs.notificationV1alpha1 = notificationv1alpha1.New(c)
 	cs.processgroupV1alpha1 = processgroupv1alpha1.New(c)
 	cs.requestV1alpha1 = requestv1alpha1.New(c)

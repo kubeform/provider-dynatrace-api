@@ -82,7 +82,8 @@ spec:
                   id:
                     type: string
                   metric:
-                    description: The metric to monitor
+                    description: 'The metric to monitor. Possible values are: `LOW_DISK_SPACE`,
+                      `LOW_INODES`, `READ_TIME_EXCEEDING` and `WRITE_TIME_EXCEEDING`'
                     type: string
                   name:
                     description: The name of the disk event rule
@@ -164,7 +165,8 @@ spec:
                   id:
                     type: string
                   metric:
-                    description: The metric to monitor
+                    description: 'The metric to monitor. Possible values are: `LOW_DISK_SPACE`,
+                      `LOW_INODES`, `READ_TIME_EXCEEDING` and `WRITE_TIME_EXCEEDING`'
                     type: string
                   name:
                     description: The name of the disk event rule

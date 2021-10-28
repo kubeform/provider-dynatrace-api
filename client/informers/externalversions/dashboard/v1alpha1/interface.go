@@ -26,6 +26,8 @@ import (
 type Interface interface {
 	// Dashboards returns a DashboardInformer.
 	Dashboards() DashboardInformer
+	// Sharings returns a SharingInformer.
+	Sharings() SharingInformer
 }
 
 type version struct {
@@ -42,4 +44,9 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // Dashboards returns a DashboardInformer.
 func (v *version) Dashboards() DashboardInformer {
 	return &dashboardInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Sharings returns a SharingInformer.
+func (v *version) Sharings() SharingInformer {
+	return &sharingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

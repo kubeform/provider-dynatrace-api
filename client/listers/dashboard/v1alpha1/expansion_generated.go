@@ -25,3 +25,11 @@ type DashboardListerExpansion interface{}
 // DashboardNamespaceListerExpansion allows custom methods to be added to
 // DashboardNamespaceLister.
 type DashboardNamespaceListerExpansion interface{}
+
+// SharingListerExpansion allows custom methods to be added to
+// SharingLister.
+type SharingListerExpansion interface{}
+
+// SharingNamespaceListerExpansion allows custom methods to be added to
+// SharingNamespaceLister.
+type SharingNamespaceListerExpansion interface{}

@@ -29,16 +29,20 @@ import (
 	autotag "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/autotag"
 	aws "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/aws"
 	azure "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/azure"
+	browser "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/browser"
 	calculated "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/calculated"
 	custom "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/custom"
 	dashboard "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/dashboard"
 	database "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/database"
 	disk "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/disk"
+	environment "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/environment"
 	host "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/host"
+	http "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/http"
 	internalinterfaces "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/internalinterfaces"
 	k8s "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/k8s"
 	maintenance "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/maintenance"
 	management "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/management"
+	mobile "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/mobile"
 	notification "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/notification"
 	processgroup "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/processgroup"
 	request "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/request"
@@ -198,15 +202,19 @@ type SharedInformerFactory interface {
 	Autotag() autotag.Interface
 	Aws() aws.Interface
 	Azure() azure.Interface
+	Browser() browser.Interface
 	Calculated() calculated.Interface
 	Custom() custom.Interface
 	Dashboard() dashboard.Interface
 	Database() database.Interface
 	Disk() disk.Interface
+	Environment() environment.Interface
 	Host() host.Interface
+	Http() http.Interface
 	K8s() k8s.Interface
 	Maintenance() maintenance.Interface
 	Management() management.Interface
+	Mobile() mobile.Interface
 	Notification() notification.Interface
 	Processgroup() processgroup.Interface
 	Request() request.Interface
@@ -236,6 +244,10 @@ func (f *sharedInformerFactory) Azure() azure.Interface {
 	return azure.New(f, f.namespace, f.tweakListOptions)
 }
 
+func (f *sharedInformerFactory) Browser() browser.Interface {
+	return browser.New(f, f.namespace, f.tweakListOptions)
+}
+
 func (f *sharedInformerFactory) Calculated() calculated.Interface {
 	return calculated.New(f, f.namespace, f.tweakListOptions)
 }
@@ -256,8 +268,16 @@ func (f *sharedInformerFactory) Disk() disk.Interface {
 	return disk.New(f, f.namespace, f.tweakListOptions)
 }
 
+func (f *sharedInformerFactory) Environment() environment.Interface {
+	return environment.New(f, f.namespace, f.tweakListOptions)
+}
+
 func (f *sharedInformerFactory) Host() host.Interface {
 	return host.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Http() http.Interface {
+	return http.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) K8s() k8s.Interface {
@@ -270,6 +290,10 @@ func (f *sharedInformerFactory) Maintenance() maintenance.Interface {
 
 func (f *sharedInformerFactory) Management() management.Interface {
 	return management.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Mobile() mobile.Interface {
+	return mobile.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Notification() notification.Interface {

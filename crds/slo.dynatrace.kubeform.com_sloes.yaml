@@ -76,12 +76,16 @@ spec:
                     type: string
                   id:
                     type: string
+                  metricExpression:
+                    description: The percentage-based metric expression for the calculation
+                      of the SLO
+                    type: string
                   name:
                     description: The name of the rule
                     type: string
                   numerator:
                     description: The metric for the count of successes (the numerator
-                      in rate calculation)
+                      in rate calculation) Deprecated
                     type: string
                   rate:
                     description: The percentage-based metric for the calculation of
@@ -128,12 +132,16 @@ spec:
                     type: string
                   id:
                     type: string
+                  metricExpression:
+                    description: The percentage-based metric expression for the calculation
+                      of the SLO
+                    type: string
                   name:
                     description: The name of the rule
                     type: string
                   numerator:
                     description: The metric for the count of successes (the numerator
-                      in rate calculation)
+                      in rate calculation) Deprecated
                     type: string
                   rate:
                     description: The percentage-based metric for the calculation of

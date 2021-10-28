@@ -29,6 +29,10 @@ type FakeSpanV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeSpanV1alpha1) Attributes(namespace string) v1alpha1.AttributeInterface {
+	return &FakeAttributes{c, namespace}
+}
+
 func (c *FakeSpanV1alpha1) CaptureRules(namespace string) v1alpha1.CaptureRuleInterface {
 	return &FakeCaptureRules{c, namespace}
 }

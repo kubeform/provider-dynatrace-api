@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// AttributeListerExpansion allows custom methods to be added to
+// AttributeLister.
+type AttributeListerExpansion interface{}
+
+// AttributeNamespaceListerExpansion allows custom methods to be added to
+// AttributeNamespaceLister.
+type AttributeNamespaceListerExpansion interface{}
+
 // CaptureRuleListerExpansion allows custom methods to be added to
 // CaptureRuleLister.
 type CaptureRuleListerExpansion interface{}

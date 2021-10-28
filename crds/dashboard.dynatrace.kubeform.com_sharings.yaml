@@ -1,0 +1,263 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: sharings.dashboard.dynatrace.kubeform.com
+spec:
+  group: dashboard.dynatrace.kubeform.com
+  names:
+    kind: Sharing
+    listKind: SharingList
+    plural: sharings
+    singular: sharing
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              backendRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  dashboardID:
+                    description: The Dynatrace entity ID of the dashboard
+                    type: string
+                  enabled:
+                    description: The dashboard is shared (`true`) or private (`false`)
+                    type: boolean
+                  id:
+                    type: string
+                  permissions:
+                    description: Access permissions of the dashboard
+                    properties:
+                      permission:
+                        description: Access permissions of the dashboard
+                        items:
+                          properties:
+                            ID:
+                              description: "The ID of the user or group to whom the
+                                permission is granted. \n Not applicable if the **type**
+                                is set to `ALL`"
+                              type: string
+                            level:
+                              description: "The level of the permission: \n * `VIEW`:
+                                The dashboard is shared with read permission. * `EDIT`:
+                                The dashboard is shared with edit permission"
+                              type: string
+                            type:
+                              description: "The type of the permission: \n * `USER`:
+                                The dashboard is shared with the specified user. *
+                                `GROUP`: The dashboard is shared with all users of
+                                the specified group. * `ALL`: The dashboard is shared
+                                via link. Any authenticated user with the link can
+                                view the dashboard"
+                              type: string
+                          required:
+                          - level
+                          - type
+                          type: object
+                        minItems: 1
+                        type: array
+                    type: object
+                  preset:
+                    description: If `true` the dashboard will be marked as preset
+                    type: boolean
+                  public:
+                    description: Configuration of the [anonymous access](https://dt-url.net/ov03sf1)
+                      to the dashboard
+                    properties:
+                      managementZones:
+                        description: "A list of management zones that can display
+                          data on the publicly shared dashboard. \n Specify management
+                          zone IDs here. For each management zone you specify Dynatrace
+                          generates an access link. To share the dashboard with its
+                          default management zone, use the `default` value"
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                    required:
+                    - managementZones
+                    type: object
+                required:
+                - dashboardID
+                type: object
+              state:
+                properties:
+                  dashboardID:
+                    description: The Dynatrace entity ID of the dashboard
+                    type: string
+                  enabled:
+                    description: The dashboard is shared (`true`) or private (`false`)
+                    type: boolean
+                  id:
+                    type: string
+                  permissions:
+                    description: Access permissions of the dashboard
+                    properties:
+                      permission:
+                        description: Access permissions of the dashboard
+                        items:
+                          properties:
+                            ID:
+                              description: "The ID of the user or group to whom the
+                                permission is granted. \n Not applicable if the **type**
+                                is set to `ALL`"
+                              type: string
+                            level:
+                              description: "The level of the permission: \n * `VIEW`:
+                                The dashboard is shared with read permission. * `EDIT`:
+                                The dashboard is shared with edit permission"
+                              type: string
+                            type:
+                              description: "The type of the permission: \n * `USER`:
+                                The dashboard is shared with the specified user. *
+                                `GROUP`: The dashboard is shared with all users of
+                                the specified group. * `ALL`: The dashboard is shared
+                                via link. Any authenticated user with the link can
+                                view the dashboard"
+                              type: string
+                          required:
+                          - level
+                          - type
+                          type: object
+                        minItems: 1
+                        type: array
+                    type: object
+                  preset:
+                    description: If `true` the dashboard will be marked as preset
+                    type: boolean
+                  public:
+                    description: Configuration of the [anonymous access](https://dt-url.net/ov03sf1)
+                      to the dashboard
+                    properties:
+                      managementZones:
+                        description: "A list of management zones that can display
+                          data on the publicly shared dashboard. \n Specify management
+                          zone IDs here. For each management zone you specify Dynatrace
+                          generates an access link. To share the dashboard with its
+                          default management zone, use the `default` value"
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                    required:
+                    - managementZones
+                    type: object
+                required:
+                - dashboardID
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

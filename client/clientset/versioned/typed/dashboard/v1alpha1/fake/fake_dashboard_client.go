@@ -33,6 +33,10 @@ func (c *FakeDashboardV1alpha1) Dashboards(namespace string) v1alpha1.DashboardI
 	return &FakeDashboards{c, namespace}
 }
 
+func (c *FakeDashboardV1alpha1) Sharings(namespace string) v1alpha1.SharingInterface {
+	return &FakeSharings{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeDashboardV1alpha1) RESTClient() rest.Interface {
