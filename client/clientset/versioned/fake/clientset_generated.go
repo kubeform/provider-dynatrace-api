@@ -30,6 +30,8 @@ import (
 	fakeawsv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/aws/v1alpha1/fake"
 	azurev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/azure/v1alpha1"
 	fakeazurev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/azure/v1alpha1/fake"
+	browserv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/browser/v1alpha1"
+	fakebrowserv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/browser/v1alpha1/fake"
 	calculatedv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/calculated/v1alpha1"
 	fakecalculatedv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/calculated/v1alpha1/fake"
 	customv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/custom/v1alpha1"
@@ -40,14 +42,20 @@ import (
 	fakedatabasev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/database/v1alpha1/fake"
 	diskv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/disk/v1alpha1"
 	fakediskv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/disk/v1alpha1/fake"
+	environmentv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/environment/v1alpha1"
+	fakeenvironmentv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/environment/v1alpha1/fake"
 	hostv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/host/v1alpha1"
 	fakehostv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/host/v1alpha1/fake"
+	httpv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/http/v1alpha1"
+	fakehttpv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/http/v1alpha1/fake"
 	k8sv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/k8s/v1alpha1"
 	fakek8sv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/k8s/v1alpha1/fake"
 	maintenancev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/maintenance/v1alpha1"
 	fakemaintenancev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/maintenance/v1alpha1/fake"
 	managementv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/management/v1alpha1"
 	fakemanagementv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/management/v1alpha1/fake"
+	mobilev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/mobile/v1alpha1"
+	fakemobilev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/mobile/v1alpha1/fake"
 	notificationv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/notification/v1alpha1"
 	fakenotificationv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/notification/v1alpha1/fake"
 	processgroupv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/processgroup/v1alpha1"
@@ -142,6 +150,11 @@ func (c *Clientset) AzureV1alpha1() azurev1alpha1.AzureV1alpha1Interface {
 	return &fakeazurev1alpha1.FakeAzureV1alpha1{Fake: &c.Fake}
 }
 
+// BrowserV1alpha1 retrieves the BrowserV1alpha1Client
+func (c *Clientset) BrowserV1alpha1() browserv1alpha1.BrowserV1alpha1Interface {
+	return &fakebrowserv1alpha1.FakeBrowserV1alpha1{Fake: &c.Fake}
+}
+
 // CalculatedV1alpha1 retrieves the CalculatedV1alpha1Client
 func (c *Clientset) CalculatedV1alpha1() calculatedv1alpha1.CalculatedV1alpha1Interface {
 	return &fakecalculatedv1alpha1.FakeCalculatedV1alpha1{Fake: &c.Fake}
@@ -167,9 +180,19 @@ func (c *Clientset) DiskV1alpha1() diskv1alpha1.DiskV1alpha1Interface {
 	return &fakediskv1alpha1.FakeDiskV1alpha1{Fake: &c.Fake}
 }
 
+// EnvironmentV1alpha1 retrieves the EnvironmentV1alpha1Client
+func (c *Clientset) EnvironmentV1alpha1() environmentv1alpha1.EnvironmentV1alpha1Interface {
+	return &fakeenvironmentv1alpha1.FakeEnvironmentV1alpha1{Fake: &c.Fake}
+}
+
 // HostV1alpha1 retrieves the HostV1alpha1Client
 func (c *Clientset) HostV1alpha1() hostv1alpha1.HostV1alpha1Interface {
 	return &fakehostv1alpha1.FakeHostV1alpha1{Fake: &c.Fake}
+}
+
+// HttpV1alpha1 retrieves the HttpV1alpha1Client
+func (c *Clientset) HttpV1alpha1() httpv1alpha1.HttpV1alpha1Interface {
+	return &fakehttpv1alpha1.FakeHttpV1alpha1{Fake: &c.Fake}
 }
 
 // K8sV1alpha1 retrieves the K8sV1alpha1Client
@@ -185,6 +208,11 @@ func (c *Clientset) MaintenanceV1alpha1() maintenancev1alpha1.MaintenanceV1alpha
 // ManagementV1alpha1 retrieves the ManagementV1alpha1Client
 func (c *Clientset) ManagementV1alpha1() managementv1alpha1.ManagementV1alpha1Interface {
 	return &fakemanagementv1alpha1.FakeManagementV1alpha1{Fake: &c.Fake}
+}
+
+// MobileV1alpha1 retrieves the MobileV1alpha1Client
+func (c *Clientset) MobileV1alpha1() mobilev1alpha1.MobileV1alpha1Interface {
+	return &fakemobilev1alpha1.FakeMobileV1alpha1{Fake: &c.Fake}
 }
 
 // NotificationV1alpha1 retrieves the NotificationV1alpha1Client

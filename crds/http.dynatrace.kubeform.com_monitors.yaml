@@ -1,0 +1,687 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: monitors.http.dynatrace.kubeform.com
+spec:
+  group: http.dynatrace.kubeform.com
+  names:
+    kind: Monitor
+    listKind: MonitorList
+    plural: monitors
+    singular: monitor
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              backendRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  anomalyDetection:
+                    description: The anomaly detection configuration.
+                    items:
+                      properties:
+                        loadingTimeThresholds:
+                          description: Thresholds for loading times
+                          items:
+                            properties:
+                              enabled:
+                                description: Performance threshold is enabled (`true`)
+                                  or disabled (`false`)
+                                type: boolean
+                              thresholds:
+                                description: The list of performance threshold rules
+                                items:
+                                  properties:
+                                    threshold:
+                                      description: The list of performance threshold
+                                        rules
+                                      items:
+                                        properties:
+                                          eventIndex:
+                                            description: Specify the event to which
+                                              an ACTION threshold applies
+                                            format: int64
+                                            type: integer
+                                          requestIndex:
+                                            description: Specify the request to which
+                                              an ACTION threshold applies
+                                            format: int64
+                                            type: integer
+                                          type:
+                                            description: 'The type of the threshold:
+                                              `TOTAL` (total loading time) or `ACTION`
+                                              (action loading time)'
+                                            type: string
+                                          valueMs:
+                                            description: Notify if monitor takes longer
+                                              than *X* milliseconds to load
+                                            format: int64
+                                            type: integer
+                                        required:
+                                        - valueMs
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - threshold
+                                  type: object
+                                type: array
+                            type: object
+                          type: array
+                        outageHandling:
+                          description: Outage handling configuration
+                          items:
+                            properties:
+                              globalOutage:
+                                description: When enabled (`true`), generate a problem
+                                  and send an alert when the monitor is unavailable
+                                  at all configured locations
+                                type: boolean
+                              localOutage:
+                                description: When enabled (`true`), generate a problem
+                                  and send an alert when the monitor is unavailable
+                                  for one or more consecutive runs at any location
+                                type: boolean
+                              localOutagePolicy:
+                                description: "Local outage handling configuration.
+                                  \n  Alert if **affectedLocations** of locations
+                                  are unable to access the web application **consecutiveRuns**
+                                  times consecutively"
+                                items:
+                                  properties:
+                                    affectedLocations:
+                                      description: The number of affected locations
+                                        to trigger an alert
+                                      format: int64
+                                      type: integer
+                                    consecutiveRuns:
+                                      description: The number of consecutive fails
+                                        to trigger an alert
+                                      format: int64
+                                      type: integer
+                                  required:
+                                  - affectedLocations
+                                  - consecutiveRuns
+                                  type: object
+                                type: array
+                              retryOnError:
+                                description: Schedule retry if browser monitor execution
+                                  results in a fail. For HTTP monitors this property
+                                  is ignored
+                                type: boolean
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  enabled:
+                    description: The monitor is enabled (`true`) or disabled (`false`).
+                    type: boolean
+                  frequency:
+                    description: "The frequency of the monitor, in minutes. \n You
+                      can use one of the following values: `5`, `10`, `15`, `30`,
+                      and `60`."
+                    format: int64
+                    type: integer
+                  id:
+                    type: string
+                  locations:
+                    description: "A list of locations from which the monitor is executed.
+                      \n To specify a location, use its entity ID."
+                    items:
+                      type: string
+                    minItems: 1
+                    type: array
+                  manuallyAssignedApps:
+                    description: A set of manually assigned applications.
+                    items:
+                      type: string
+                    minItems: 1
+                    type: array
+                  name:
+                    description: The name of the monitor.
+                    type: string
+                  script:
+                    description: The HTTP Script
+                    properties:
+                      request:
+                        description: A HTTP request to be performed by the monitor.
+                        items:
+                          properties:
+                            body:
+                              description: The body of the HTTP request.
+                              type: string
+                            configuration:
+                              description: The setup of the monitor
+                              properties:
+                                acceptAnyCertificate:
+                                  description: "If set to `false`, then the monitor
+                                    fails with invalid SSL certificates. \n If not
+                                    set, the `false` option is used"
+                                  type: boolean
+                                followRedirects:
+                                  description: "If set to `false`, redirects are reported
+                                    as successful requests with response code 3xx.
+                                    \n If not set, the `false` option is used."
+                                  type: boolean
+                                headers:
+                                  description: The setup of the monitor
+                                  properties:
+                                    header:
+                                      description: contains an HTTP header of the
+                                        request
+                                      items:
+                                        properties:
+                                          name:
+                                            description: The key of the header
+                                            type: string
+                                          value:
+                                            description: The value of the header
+                                            type: string
+                                        required:
+                                        - name
+                                        - value
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - header
+                                  type: object
+                                userAgent:
+                                  description: The User agent of the request
+                                  type: string
+                              type: object
+                            description:
+                              description: A short description of the event to appear
+                                in the web UI.
+                              type: string
+                            method:
+                              description: The HTTP method of the request.
+                              type: string
+                            postProcessing:
+                              description: Javascript code to execute after sending
+                                the request.
+                              type: string
+                            preProcessing:
+                              description: Javascript code to execute before sending
+                                the request.
+                              type: string
+                            url:
+                              description: The URL to check.
+                              type: string
+                            validation:
+                              description: Validation helps you verify that your HTTP
+                                monitor loads the expected content
+                              properties:
+                                rule:
+                                  description: A list of validation rules
+                                  items:
+                                    properties:
+                                      passIfFound:
+                                        description: ' The validation condition. `true`
+                                          means validation succeeds if the specified
+                                          content/element is found. `false` means
+                                          validation fails if the specified content/element
+                                          is found. Always specify `false` for `certificateExpiryDateConstraint`
+                                          to fail the monitor if SSL certificate expiry
+                                          is within the specified number of days'
+                                        type: boolean
+                                      type:
+                                        description: The type of the rule. Possible
+                                          values are `patternConstraint`, `regexConstraint`,
+                                          `httpStatusesList` and `certificateExpiryDateConstraint`
+                                        type: string
+                                      value:
+                                        description: The content to look for
+                                        type: string
+                                    required:
+                                    - type
+                                    - value
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                              required:
+                              - rule
+                              type: object
+                          required:
+                          - method
+                          - url
+                          type: object
+                        minItems: 1
+                        type: array
+                    required:
+                    - request
+                    type: object
+                  tags:
+                    description: "A set of tags assigned to the monitor. \n You can
+                      specify only the value of the tag here and the `CONTEXTLESS`
+                      context and source 'USER' will be added automatically."
+                    items:
+                      properties:
+                        tag:
+                          description: Tag with source of a Dynatrace entity.
+                          items:
+                            properties:
+                              context:
+                                description: "The origin of the tag. Supported values
+                                  are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`,
+                                  `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and
+                                  `KUBERNETES`. \n Custom tags use the `CONTEXTLESS`
+                                  value."
+                                type: string
+                              key:
+                                description: "The key of the tag. \n Custom tags have
+                                  the tag value here."
+                                type: string
+                              source:
+                                description: The source of the tag. Supported values
+                                  are `USER`, `RULE_BASED` and `AUTO`.
+                                type: string
+                              value:
+                                description: " The value of the tag. \n Not applicable
+                                  to custom tags."
+                                type: string
+                            required:
+                            - context
+                            - key
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                required:
+                - frequency
+                - name
+                type: object
+              state:
+                properties:
+                  anomalyDetection:
+                    description: The anomaly detection configuration.
+                    items:
+                      properties:
+                        loadingTimeThresholds:
+                          description: Thresholds for loading times
+                          items:
+                            properties:
+                              enabled:
+                                description: Performance threshold is enabled (`true`)
+                                  or disabled (`false`)
+                                type: boolean
+                              thresholds:
+                                description: The list of performance threshold rules
+                                items:
+                                  properties:
+                                    threshold:
+                                      description: The list of performance threshold
+                                        rules
+                                      items:
+                                        properties:
+                                          eventIndex:
+                                            description: Specify the event to which
+                                              an ACTION threshold applies
+                                            format: int64
+                                            type: integer
+                                          requestIndex:
+                                            description: Specify the request to which
+                                              an ACTION threshold applies
+                                            format: int64
+                                            type: integer
+                                          type:
+                                            description: 'The type of the threshold:
+                                              `TOTAL` (total loading time) or `ACTION`
+                                              (action loading time)'
+                                            type: string
+                                          valueMs:
+                                            description: Notify if monitor takes longer
+                                              than *X* milliseconds to load
+                                            format: int64
+                                            type: integer
+                                        required:
+                                        - valueMs
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - threshold
+                                  type: object
+                                type: array
+                            type: object
+                          type: array
+                        outageHandling:
+                          description: Outage handling configuration
+                          items:
+                            properties:
+                              globalOutage:
+                                description: When enabled (`true`), generate a problem
+                                  and send an alert when the monitor is unavailable
+                                  at all configured locations
+                                type: boolean
+                              localOutage:
+                                description: When enabled (`true`), generate a problem
+                                  and send an alert when the monitor is unavailable
+                                  for one or more consecutive runs at any location
+                                type: boolean
+                              localOutagePolicy:
+                                description: "Local outage handling configuration.
+                                  \n  Alert if **affectedLocations** of locations
+                                  are unable to access the web application **consecutiveRuns**
+                                  times consecutively"
+                                items:
+                                  properties:
+                                    affectedLocations:
+                                      description: The number of affected locations
+                                        to trigger an alert
+                                      format: int64
+                                      type: integer
+                                    consecutiveRuns:
+                                      description: The number of consecutive fails
+                                        to trigger an alert
+                                      format: int64
+                                      type: integer
+                                  required:
+                                  - affectedLocations
+                                  - consecutiveRuns
+                                  type: object
+                                type: array
+                              retryOnError:
+                                description: Schedule retry if browser monitor execution
+                                  results in a fail. For HTTP monitors this property
+                                  is ignored
+                                type: boolean
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  enabled:
+                    description: The monitor is enabled (`true`) or disabled (`false`).
+                    type: boolean
+                  frequency:
+                    description: "The frequency of the monitor, in minutes. \n You
+                      can use one of the following values: `5`, `10`, `15`, `30`,
+                      and `60`."
+                    format: int64
+                    type: integer
+                  id:
+                    type: string
+                  locations:
+                    description: "A list of locations from which the monitor is executed.
+                      \n To specify a location, use its entity ID."
+                    items:
+                      type: string
+                    minItems: 1
+                    type: array
+                  manuallyAssignedApps:
+                    description: A set of manually assigned applications.
+                    items:
+                      type: string
+                    minItems: 1
+                    type: array
+                  name:
+                    description: The name of the monitor.
+                    type: string
+                  script:
+                    description: The HTTP Script
+                    properties:
+                      request:
+                        description: A HTTP request to be performed by the monitor.
+                        items:
+                          properties:
+                            body:
+                              description: The body of the HTTP request.
+                              type: string
+                            configuration:
+                              description: The setup of the monitor
+                              properties:
+                                acceptAnyCertificate:
+                                  description: "If set to `false`, then the monitor
+                                    fails with invalid SSL certificates. \n If not
+                                    set, the `false` option is used"
+                                  type: boolean
+                                followRedirects:
+                                  description: "If set to `false`, redirects are reported
+                                    as successful requests with response code 3xx.
+                                    \n If not set, the `false` option is used."
+                                  type: boolean
+                                headers:
+                                  description: The setup of the monitor
+                                  properties:
+                                    header:
+                                      description: contains an HTTP header of the
+                                        request
+                                      items:
+                                        properties:
+                                          name:
+                                            description: The key of the header
+                                            type: string
+                                          value:
+                                            description: The value of the header
+                                            type: string
+                                        required:
+                                        - name
+                                        - value
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - header
+                                  type: object
+                                userAgent:
+                                  description: The User agent of the request
+                                  type: string
+                              type: object
+                            description:
+                              description: A short description of the event to appear
+                                in the web UI.
+                              type: string
+                            method:
+                              description: The HTTP method of the request.
+                              type: string
+                            postProcessing:
+                              description: Javascript code to execute after sending
+                                the request.
+                              type: string
+                            preProcessing:
+                              description: Javascript code to execute before sending
+                                the request.
+                              type: string
+                            url:
+                              description: The URL to check.
+                              type: string
+                            validation:
+                              description: Validation helps you verify that your HTTP
+                                monitor loads the expected content
+                              properties:
+                                rule:
+                                  description: A list of validation rules
+                                  items:
+                                    properties:
+                                      passIfFound:
+                                        description: ' The validation condition. `true`
+                                          means validation succeeds if the specified
+                                          content/element is found. `false` means
+                                          validation fails if the specified content/element
+                                          is found. Always specify `false` for `certificateExpiryDateConstraint`
+                                          to fail the monitor if SSL certificate expiry
+                                          is within the specified number of days'
+                                        type: boolean
+                                      type:
+                                        description: The type of the rule. Possible
+                                          values are `patternConstraint`, `regexConstraint`,
+                                          `httpStatusesList` and `certificateExpiryDateConstraint`
+                                        type: string
+                                      value:
+                                        description: The content to look for
+                                        type: string
+                                    required:
+                                    - type
+                                    - value
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                              required:
+                              - rule
+                              type: object
+                          required:
+                          - method
+                          - url
+                          type: object
+                        minItems: 1
+                        type: array
+                    required:
+                    - request
+                    type: object
+                  tags:
+                    description: "A set of tags assigned to the monitor. \n You can
+                      specify only the value of the tag here and the `CONTEXTLESS`
+                      context and source 'USER' will be added automatically."
+                    items:
+                      properties:
+                        tag:
+                          description: Tag with source of a Dynatrace entity.
+                          items:
+                            properties:
+                              context:
+                                description: "The origin of the tag. Supported values
+                                  are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`,
+                                  `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and
+                                  `KUBERNETES`. \n Custom tags use the `CONTEXTLESS`
+                                  value."
+                                type: string
+                              key:
+                                description: "The key of the tag. \n Custom tags have
+                                  the tag value here."
+                                type: string
+                              source:
+                                description: The source of the tag. Supported values
+                                  are `USER`, `RULE_BASED` and `AUTO`.
+                                type: string
+                              value:
+                                description: " The value of the tag. \n Not applicable
+                                  to custom tags."
+                                type: string
+                            required:
+                            - context
+                            - key
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                required:
+                - frequency
+                - name
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

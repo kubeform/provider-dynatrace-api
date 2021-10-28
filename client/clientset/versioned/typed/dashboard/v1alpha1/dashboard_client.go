@@ -28,6 +28,7 @@ import (
 type DashboardV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	DashboardsGetter
+	SharingsGetter
 }
 
 // DashboardV1alpha1Client is used to interact with features provided by the dashboard.dynatrace.kubeform.com group.
@@ -37,6 +38,10 @@ type DashboardV1alpha1Client struct {
 
 func (c *DashboardV1alpha1Client) Dashboards(namespace string) DashboardInterface {
 	return newDashboards(c, namespace)
+}
+
+func (c *DashboardV1alpha1Client) Sharings(namespace string) SharingInterface {
+	return newSharings(c, namespace)
 }
 
 // NewForConfig creates a new DashboardV1alpha1Client for the given config.

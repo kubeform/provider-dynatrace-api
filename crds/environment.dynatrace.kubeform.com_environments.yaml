@@ -1,0 +1,535 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: environments.environment.dynatrace.kubeform.com
+spec:
+  group: environment.dynatrace.kubeform.com
+  names:
+    kind: Environment
+    listKind: EnvironmentList
+    plural: environments
+    singular: environment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              backendRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  id:
+                    type: string
+                  name:
+                    description: The display name of the environment
+                    type: string
+                  quotas:
+                    description: Environment level consumption and quotas information
+                    properties:
+                      ddus:
+                        description: Davis Data Units consumption and quota information
+                          on environment level. Not set (and not editable) if Davis
+                          data units is not enabled
+                        properties:
+                          annual:
+                            description: Annual environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                      demUnits:
+                        description: DEM units consumption and quota information on
+                          environment level
+                        properties:
+                          annual:
+                            description: Annual environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                      hostUnits:
+                        description: Host units consumption and quota information
+                          on environment level
+                        format: int64
+                        type: integer
+                      logs:
+                        description: Log Monitoring consumption and quota information
+                          on environment level. Not set (and not editable) if Log
+                          monitoring is not enabled. Not set (and not editable) if
+                          Log monitoring is migrated to Davis data on license level
+                        properties:
+                          annual:
+                            description: Annual environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                      synthetic:
+                        description: Synthetic monitors consumption and quota information
+                          on environment level. Not set (and not editable) if neither
+                          Synthetic nor DEM units is enabled
+                        properties:
+                          annual:
+                            description: Annual environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                      userSessions:
+                        description: User sessions consumption and quota information
+                          on environment level
+                        properties:
+                          annual:
+                            description: Annual total User sessions environment quota.
+                              Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly total User sessions environment quota.
+                              Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                    type: object
+                  state:
+                    description: Indicates whether the environment is enabled or disabled.
+                      Possible values are `ENABLED` and `DISABLED`. The default value
+                      is ENABLED
+                    type: string
+                  storage:
+                    description: Environment level storage usage and limit information
+                    properties:
+                      limits:
+                        properties:
+                          logs:
+                            description: Log monitoring storage usage and limit information
+                              on environment level in bytes. Not editable when Log
+                              monitoring is not allowed by license or not configured
+                              on cluster level. 0 for unlimited.
+                            format: int64
+                            type: integer
+                          sessionReplay:
+                            description: Session replay storage usage and limit information
+                              on environment level in bytes. 0 for unlimited.
+                            format: int64
+                            type: integer
+                          symbolFiles:
+                            description: Session replay storage usage and limit information
+                              on environment level in bytes. 0 for unlimited.
+                            format: int64
+                            type: integer
+                          transactions:
+                            description: Transaction storage usage and limit information
+                              on environment level in bytes. 0 for unlimited.
+                            format: int64
+                            type: integer
+                        type: object
+                      retention:
+                        properties:
+                          logs:
+                            description: Log monitoring retention settings on environment
+                              level in days. Not editable when Log monitoring is not
+                              allowed by license or not configured on cluster level.
+                              Can be set to any value from 5 to 90 days
+                            format: int64
+                            type: integer
+                          rum:
+                            description: Real user monitoring retention settings on
+                              environment level in days. Can be set to any value from
+                              1 to 35 days
+                            format: int64
+                            type: integer
+                          serviceCodeLevel:
+                            description: Service code level retention settings on
+                              environment level in days. Service code level retention
+                              time can't be greater than service request level retention
+                              time and both can't exceed one year
+                            format: int64
+                            type: integer
+                          serviceRequestLevel:
+                            description: Service request level retention settings
+                              on environment level in days. Service code level retention
+                              time can't be greater than service request level retention
+                              time and both can't exceed one year
+                            format: int64
+                            type: integer
+                          sessionReplay:
+                            description: Session replay retention settings on environment
+                              level in days. Can be set to any value from 1 to 35
+                              days
+                            format: int64
+                            type: integer
+                          synthetic:
+                            description: Synthetic monitoring retention settings on
+                              environment level in days. Can be set to any value from
+                              1 to 35 days
+                            format: int64
+                            type: integer
+                        required:
+                        - logs
+                        - rum
+                        - serviceCodeLevel
+                        - serviceRequestLevel
+                        - sessionReplay
+                        - synthetic
+                        type: object
+                      transactions:
+                        description: Maximum number of newly monitored entry point
+                          PurePaths captured per process/minute on environment level.
+                          Can be set to any value from 100 to 100000
+                        format: int64
+                        type: integer
+                      userActions:
+                        description: Maximum number of user actions generated per
+                          minute on environment level. Can be set to any value from
+                          1 to 2147483646 or left unlimited by omitting this property
+                        format: int64
+                        type: integer
+                    required:
+                    - transactions
+                    type: object
+                  tags:
+                    description: A set of tags that are assigned to this environment.
+                      Every tag can have a maximum length of 100 characters
+                    items:
+                      type: string
+                    type: array
+                  trial:
+                    description: Specifies whether the environment is a trial environment
+                      or a non-trial environment. Creating a trial environment is
+                      only possible if your license allows that. The default value
+                      is false (non-trial)
+                    type: boolean
+                required:
+                - name
+                - state
+                - storage
+                type: object
+              state:
+                properties:
+                  id:
+                    type: string
+                  name:
+                    description: The display name of the environment
+                    type: string
+                  quotas:
+                    description: Environment level consumption and quotas information
+                    properties:
+                      ddus:
+                        description: Davis Data Units consumption and quota information
+                          on environment level. Not set (and not editable) if Davis
+                          data units is not enabled
+                        properties:
+                          annual:
+                            description: Annual environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                      demUnits:
+                        description: DEM units consumption and quota information on
+                          environment level
+                        properties:
+                          annual:
+                            description: Annual environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                      hostUnits:
+                        description: Host units consumption and quota information
+                          on environment level
+                        format: int64
+                        type: integer
+                      logs:
+                        description: Log Monitoring consumption and quota information
+                          on environment level. Not set (and not editable) if Log
+                          monitoring is not enabled. Not set (and not editable) if
+                          Log monitoring is migrated to Davis data on license level
+                        properties:
+                          annual:
+                            description: Annual environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                      synthetic:
+                        description: Synthetic monitors consumption and quota information
+                          on environment level. Not set (and not editable) if neither
+                          Synthetic nor DEM units is enabled
+                        properties:
+                          annual:
+                            description: Annual environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly environment quota. Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                      userSessions:
+                        description: User sessions consumption and quota information
+                          on environment level
+                        properties:
+                          annual:
+                            description: Annual total User sessions environment quota.
+                              Not set if unlimited
+                            format: int64
+                            type: integer
+                          monthly:
+                            description: Monthly total User sessions environment quota.
+                              Not set if unlimited
+                            format: int64
+                            type: integer
+                        type: object
+                    type: object
+                  state:
+                    description: Indicates whether the environment is enabled or disabled.
+                      Possible values are `ENABLED` and `DISABLED`. The default value
+                      is ENABLED
+                    type: string
+                  storage:
+                    description: Environment level storage usage and limit information
+                    properties:
+                      limits:
+                        properties:
+                          logs:
+                            description: Log monitoring storage usage and limit information
+                              on environment level in bytes. Not editable when Log
+                              monitoring is not allowed by license or not configured
+                              on cluster level. 0 for unlimited.
+                            format: int64
+                            type: integer
+                          sessionReplay:
+                            description: Session replay storage usage and limit information
+                              on environment level in bytes. 0 for unlimited.
+                            format: int64
+                            type: integer
+                          symbolFiles:
+                            description: Session replay storage usage and limit information
+                              on environment level in bytes. 0 for unlimited.
+                            format: int64
+                            type: integer
+                          transactions:
+                            description: Transaction storage usage and limit information
+                              on environment level in bytes. 0 for unlimited.
+                            format: int64
+                            type: integer
+                        type: object
+                      retention:
+                        properties:
+                          logs:
+                            description: Log monitoring retention settings on environment
+                              level in days. Not editable when Log monitoring is not
+                              allowed by license or not configured on cluster level.
+                              Can be set to any value from 5 to 90 days
+                            format: int64
+                            type: integer
+                          rum:
+                            description: Real user monitoring retention settings on
+                              environment level in days. Can be set to any value from
+                              1 to 35 days
+                            format: int64
+                            type: integer
+                          serviceCodeLevel:
+                            description: Service code level retention settings on
+                              environment level in days. Service code level retention
+                              time can't be greater than service request level retention
+                              time and both can't exceed one year
+                            format: int64
+                            type: integer
+                          serviceRequestLevel:
+                            description: Service request level retention settings
+                              on environment level in days. Service code level retention
+                              time can't be greater than service request level retention
+                              time and both can't exceed one year
+                            format: int64
+                            type: integer
+                          sessionReplay:
+                            description: Session replay retention settings on environment
+                              level in days. Can be set to any value from 1 to 35
+                              days
+                            format: int64
+                            type: integer
+                          synthetic:
+                            description: Synthetic monitoring retention settings on
+                              environment level in days. Can be set to any value from
+                              1 to 35 days
+                            format: int64
+                            type: integer
+                        required:
+                        - logs
+                        - rum
+                        - serviceCodeLevel
+                        - serviceRequestLevel
+                        - sessionReplay
+                        - synthetic
+                        type: object
+                      transactions:
+                        description: Maximum number of newly monitored entry point
+                          PurePaths captured per process/minute on environment level.
+                          Can be set to any value from 100 to 100000
+                        format: int64
+                        type: integer
+                      userActions:
+                        description: Maximum number of user actions generated per
+                          minute on environment level. Can be set to any value from
+                          1 to 2147483646 or left unlimited by omitting this property
+                        format: int64
+                        type: integer
+                    required:
+                    - transactions
+                    type: object
+                  tags:
+                    description: A set of tags that are assigned to this environment.
+                      Every tag can have a maximum length of 100 characters
+                    items:
+                      type: string
+                    type: array
+                  trial:
+                    description: Specifies whether the environment is a trial environment
+                      or a non-trial environment. Creating a trial environment is
+                      only possible if your license allows that. The default value
+                      is false (non-trial)
+                    type: boolean
+                required:
+                - name
+                - state
+                - storage
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
