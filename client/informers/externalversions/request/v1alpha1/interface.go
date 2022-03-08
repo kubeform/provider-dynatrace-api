@@ -26,6 +26,10 @@ import (
 type Interface interface {
 	// Attributes returns a AttributeInformer.
 	Attributes() AttributeInformer
+	// Namings returns a NamingInformer.
+	Namings() NamingInformer
+	// Namingses returns a NamingsInformer.
+	Namingses() NamingsInformer
 }
 
 type version struct {
@@ -42,4 +46,14 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // Attributes returns a AttributeInformer.
 func (v *version) Attributes() AttributeInformer {
 	return &attributeInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Namings returns a NamingInformer.
+func (v *version) Namings() NamingInformer {
+	return &namingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Namingses returns a NamingsInformer.
+func (v *version) Namingses() NamingsInformer {
+	return &namingsInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

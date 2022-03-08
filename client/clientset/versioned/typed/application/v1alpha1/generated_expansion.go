@@ -19,3 +19,7 @@ limitations under the License.
 package v1alpha1
 
 type AnomaliesExpansion interface{}
+
+type DataPrivacyExpansion interface{}
+
+type ErrorRulesExpansion interface{}

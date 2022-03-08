@@ -36,6 +36,7 @@ import (
 	hostv1alpha1 "kubeform.dev/provider-dynatrace-api/apis/host/v1alpha1"
 	httpv1alpha1 "kubeform.dev/provider-dynatrace-api/apis/http/v1alpha1"
 	k8sv1alpha1 "kubeform.dev/provider-dynatrace-api/apis/k8s/v1alpha1"
+	keyv1alpha1 "kubeform.dev/provider-dynatrace-api/apis/key/v1alpha1"
 	maintenancev1alpha1 "kubeform.dev/provider-dynatrace-api/apis/maintenance/v1alpha1"
 	managementv1alpha1 "kubeform.dev/provider-dynatrace-api/apis/management/v1alpha1"
 	mobilev1alpha1 "kubeform.dev/provider-dynatrace-api/apis/mobile/v1alpha1"
@@ -46,6 +47,8 @@ import (
 	servicev1alpha1 "kubeform.dev/provider-dynatrace-api/apis/service/v1alpha1"
 	slov1alpha1 "kubeform.dev/provider-dynatrace-api/apis/slo/v1alpha1"
 	spanv1alpha1 "kubeform.dev/provider-dynatrace-api/apis/span/v1alpha1"
+	userv1alpha1 "kubeform.dev/provider-dynatrace-api/apis/user/v1alpha1"
+	webv1alpha1 "kubeform.dev/provider-dynatrace-api/apis/web/v1alpha1"
 
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
@@ -84,6 +87,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=application.dynatrace.kubeform.com, Version=v1alpha1
 	case applicationv1alpha1.SchemeGroupVersion.WithResource("anomalieses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Application().V1alpha1().Anomalieses().Informer()}, nil
+	case applicationv1alpha1.SchemeGroupVersion.WithResource("dataprivacies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Application().V1alpha1().DataPrivacies().Informer()}, nil
+	case applicationv1alpha1.SchemeGroupVersion.WithResource("errorruleses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Application().V1alpha1().ErrorRuleses().Informer()}, nil
 
 		// Group=autotag.dynatrace.kubeform.com, Version=v1alpha1
 	case autotagv1alpha1.SchemeGroupVersion.WithResource("autotags"):
@@ -143,6 +150,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	case k8sv1alpha1.SchemeGroupVersion.WithResource("credentialses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.K8s().V1alpha1().Credentialses().Informer()}, nil
 
+		// Group=key.dynatrace.kubeform.com, Version=v1alpha1
+	case keyv1alpha1.SchemeGroupVersion.WithResource("requestses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Key().V1alpha1().Requestses().Informer()}, nil
+
 		// Group=maintenance.dynatrace.kubeform.com, Version=v1alpha1
 	case maintenancev1alpha1.SchemeGroupVersion.WithResource("windows"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Maintenance().V1alpha1().Windows().Informer()}, nil
@@ -166,6 +177,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=request.dynatrace.kubeform.com, Version=v1alpha1
 	case requestv1alpha1.SchemeGroupVersion.WithResource("attributes"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Request().V1alpha1().Attributes().Informer()}, nil
+	case requestv1alpha1.SchemeGroupVersion.WithResource("namings"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Request().V1alpha1().Namings().Informer()}, nil
+	case requestv1alpha1.SchemeGroupVersion.WithResource("namingses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Request().V1alpha1().Namingses().Informer()}, nil
 
 		// Group=resource.dynatrace.kubeform.com, Version=v1alpha1
 	case resourcev1alpha1.SchemeGroupVersion.WithResource("attributeses"):
@@ -190,6 +205,16 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Span().V1alpha1().ContextPropagations().Informer()}, nil
 	case spanv1alpha1.SchemeGroupVersion.WithResource("entrypoints"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Span().V1alpha1().EntryPoints().Informer()}, nil
+
+		// Group=user.dynatrace.kubeform.com, Version=v1alpha1
+	case userv1alpha1.SchemeGroupVersion.WithResource("groups"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.User().V1alpha1().Groups().Informer()}, nil
+	case userv1alpha1.SchemeGroupVersion.WithResource("users"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.User().V1alpha1().Users().Informer()}, nil
+
+		// Group=web.dynatrace.kubeform.com, Version=v1alpha1
+	case webv1alpha1.SchemeGroupVersion.WithResource("applications"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Web().V1alpha1().Applications().Informer()}, nil
 
 	}
 

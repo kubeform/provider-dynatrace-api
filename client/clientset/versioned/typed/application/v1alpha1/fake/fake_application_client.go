@@ -33,6 +33,14 @@ func (c *FakeApplicationV1alpha1) Anomalieses(namespace string) v1alpha1.Anomali
 	return &FakeAnomalieses{c, namespace}
 }
 
+func (c *FakeApplicationV1alpha1) DataPrivacies(namespace string) v1alpha1.DataPrivacyInterface {
+	return &FakeDataPrivacies{c, namespace}
+}
+
+func (c *FakeApplicationV1alpha1) ErrorRuleses(namespace string) v1alpha1.ErrorRulesInterface {
+	return &FakeErrorRuleses{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeApplicationV1alpha1) RESTClient() rest.Interface {
