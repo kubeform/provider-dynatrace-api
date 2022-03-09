@@ -25,3 +25,19 @@ type AttributeListerExpansion interface{}
 // AttributeNamespaceListerExpansion allows custom methods to be added to
 // AttributeNamespaceLister.
 type AttributeNamespaceListerExpansion interface{}
+
+// NamingListerExpansion allows custom methods to be added to
+// NamingLister.
+type NamingListerExpansion interface{}
+
+// NamingNamespaceListerExpansion allows custom methods to be added to
+// NamingNamespaceLister.
+type NamingNamespaceListerExpansion interface{}
+
+// NamingsListerExpansion allows custom methods to be added to
+// NamingsLister.
+type NamingsListerExpansion interface{}
+
+// NamingsNamespaceListerExpansion allows custom methods to be added to
+// NamingsNamespaceLister.
+type NamingsNamespaceListerExpansion interface{}

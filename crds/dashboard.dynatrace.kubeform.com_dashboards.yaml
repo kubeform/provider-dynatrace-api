@@ -172,6 +172,7 @@ spec:
                         type: array
                     required:
                     - name
+                    - owner
                     type: object
                   id:
                     type: string
@@ -723,6 +724,7 @@ spec:
                         type: array
                     required:
                     - name
+                    - owner
                     type: object
                   id:
                     type: string

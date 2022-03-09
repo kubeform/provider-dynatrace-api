@@ -36,6 +36,7 @@ import (
 	hostv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/host/v1alpha1"
 	httpv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/http/v1alpha1"
 	k8sv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/k8s/v1alpha1"
+	keyv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/key/v1alpha1"
 	maintenancev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/maintenance/v1alpha1"
 	managementv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/management/v1alpha1"
 	mobilev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/mobile/v1alpha1"
@@ -46,6 +47,8 @@ import (
 	servicev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/service/v1alpha1"
 	slov1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/slo/v1alpha1"
 	spanv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/span/v1alpha1"
+	userv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/user/v1alpha1"
+	webv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/web/v1alpha1"
 
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
@@ -69,6 +72,7 @@ type Interface interface {
 	HostV1alpha1() hostv1alpha1.HostV1alpha1Interface
 	HttpV1alpha1() httpv1alpha1.HttpV1alpha1Interface
 	K8sV1alpha1() k8sv1alpha1.K8sV1alpha1Interface
+	KeyV1alpha1() keyv1alpha1.KeyV1alpha1Interface
 	MaintenanceV1alpha1() maintenancev1alpha1.MaintenanceV1alpha1Interface
 	ManagementV1alpha1() managementv1alpha1.ManagementV1alpha1Interface
 	MobileV1alpha1() mobilev1alpha1.MobileV1alpha1Interface
@@ -79,6 +83,8 @@ type Interface interface {
 	ServiceV1alpha1() servicev1alpha1.ServiceV1alpha1Interface
 	SloV1alpha1() slov1alpha1.SloV1alpha1Interface
 	SpanV1alpha1() spanv1alpha1.SpanV1alpha1Interface
+	UserV1alpha1() userv1alpha1.UserV1alpha1Interface
+	WebV1alpha1() webv1alpha1.WebV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
@@ -100,6 +106,7 @@ type Clientset struct {
 	hostV1alpha1         *hostv1alpha1.HostV1alpha1Client
 	httpV1alpha1         *httpv1alpha1.HttpV1alpha1Client
 	k8sV1alpha1          *k8sv1alpha1.K8sV1alpha1Client
+	keyV1alpha1          *keyv1alpha1.KeyV1alpha1Client
 	maintenanceV1alpha1  *maintenancev1alpha1.MaintenanceV1alpha1Client
 	managementV1alpha1   *managementv1alpha1.ManagementV1alpha1Client
 	mobileV1alpha1       *mobilev1alpha1.MobileV1alpha1Client
@@ -110,6 +117,8 @@ type Clientset struct {
 	serviceV1alpha1      *servicev1alpha1.ServiceV1alpha1Client
 	sloV1alpha1          *slov1alpha1.SloV1alpha1Client
 	spanV1alpha1         *spanv1alpha1.SpanV1alpha1Client
+	userV1alpha1         *userv1alpha1.UserV1alpha1Client
+	webV1alpha1          *webv1alpha1.WebV1alpha1Client
 }
 
 // AlertingV1alpha1 retrieves the AlertingV1alpha1Client
@@ -187,6 +196,11 @@ func (c *Clientset) K8sV1alpha1() k8sv1alpha1.K8sV1alpha1Interface {
 	return c.k8sV1alpha1
 }
 
+// KeyV1alpha1 retrieves the KeyV1alpha1Client
+func (c *Clientset) KeyV1alpha1() keyv1alpha1.KeyV1alpha1Interface {
+	return c.keyV1alpha1
+}
+
 // MaintenanceV1alpha1 retrieves the MaintenanceV1alpha1Client
 func (c *Clientset) MaintenanceV1alpha1() maintenancev1alpha1.MaintenanceV1alpha1Interface {
 	return c.maintenanceV1alpha1
@@ -235,6 +249,16 @@ func (c *Clientset) SloV1alpha1() slov1alpha1.SloV1alpha1Interface {
 // SpanV1alpha1 retrieves the SpanV1alpha1Client
 func (c *Clientset) SpanV1alpha1() spanv1alpha1.SpanV1alpha1Interface {
 	return c.spanV1alpha1
+}
+
+// UserV1alpha1 retrieves the UserV1alpha1Client
+func (c *Clientset) UserV1alpha1() userv1alpha1.UserV1alpha1Interface {
+	return c.userV1alpha1
+}
+
+// WebV1alpha1 retrieves the WebV1alpha1Client
+func (c *Clientset) WebV1alpha1() webv1alpha1.WebV1alpha1Interface {
+	return c.webV1alpha1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -318,6 +342,10 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	if err != nil {
 		return nil, err
 	}
+	cs.keyV1alpha1, err = keyv1alpha1.NewForConfig(&configShallowCopy)
+	if err != nil {
+		return nil, err
+	}
 	cs.maintenanceV1alpha1, err = maintenancev1alpha1.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
@@ -358,6 +386,14 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	if err != nil {
 		return nil, err
 	}
+	cs.userV1alpha1, err = userv1alpha1.NewForConfig(&configShallowCopy)
+	if err != nil {
+		return nil, err
+	}
+	cs.webV1alpha1, err = webv1alpha1.NewForConfig(&configShallowCopy)
+	if err != nil {
+		return nil, err
+	}
 
 	cs.DiscoveryClient, err = discovery.NewDiscoveryClientForConfig(&configShallowCopy)
 	if err != nil {
@@ -385,6 +421,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 	cs.hostV1alpha1 = hostv1alpha1.NewForConfigOrDie(c)
 	cs.httpV1alpha1 = httpv1alpha1.NewForConfigOrDie(c)
 	cs.k8sV1alpha1 = k8sv1alpha1.NewForConfigOrDie(c)
+	cs.keyV1alpha1 = keyv1alpha1.NewForConfigOrDie(c)
 	cs.maintenanceV1alpha1 = maintenancev1alpha1.NewForConfigOrDie(c)
 	cs.managementV1alpha1 = managementv1alpha1.NewForConfigOrDie(c)
 	cs.mobileV1alpha1 = mobilev1alpha1.NewForConfigOrDie(c)
@@ -395,6 +432,8 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 	cs.serviceV1alpha1 = servicev1alpha1.NewForConfigOrDie(c)
 	cs.sloV1alpha1 = slov1alpha1.NewForConfigOrDie(c)
 	cs.spanV1alpha1 = spanv1alpha1.NewForConfigOrDie(c)
+	cs.userV1alpha1 = userv1alpha1.NewForConfigOrDie(c)
+	cs.webV1alpha1 = webv1alpha1.NewForConfigOrDie(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClientForConfigOrDie(c)
 	return &cs
@@ -418,6 +457,7 @@ func New(c rest.Interface) *Clientset {
 	cs.hostV1alpha1 = hostv1alpha1.New(c)
 	cs.httpV1alpha1 = httpv1alpha1.New(c)
 	cs.k8sV1alpha1 = k8sv1alpha1.New(c)
+	cs.keyV1alpha1 = keyv1alpha1.New(c)
 	cs.maintenanceV1alpha1 = maintenancev1alpha1.New(c)
 	cs.managementV1alpha1 = managementv1alpha1.New(c)
 	cs.mobileV1alpha1 = mobilev1alpha1.New(c)
@@ -428,6 +468,8 @@ func New(c rest.Interface) *Clientset {
 	cs.serviceV1alpha1 = servicev1alpha1.New(c)
 	cs.sloV1alpha1 = slov1alpha1.New(c)
 	cs.spanV1alpha1 = spanv1alpha1.New(c)
+	cs.userV1alpha1 = userv1alpha1.New(c)
+	cs.webV1alpha1 = webv1alpha1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

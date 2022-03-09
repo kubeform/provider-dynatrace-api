@@ -25,3 +25,19 @@ type AnomaliesListerExpansion interface{}
 // AnomaliesNamespaceListerExpansion allows custom methods to be added to
 // AnomaliesNamespaceLister.
 type AnomaliesNamespaceListerExpansion interface{}
+
+// DataPrivacyListerExpansion allows custom methods to be added to
+// DataPrivacyLister.
+type DataPrivacyListerExpansion interface{}
+
+// DataPrivacyNamespaceListerExpansion allows custom methods to be added to
+// DataPrivacyNamespaceLister.
+type DataPrivacyNamespaceListerExpansion interface{}
+
+// ErrorRulesListerExpansion allows custom methods to be added to
+// ErrorRulesLister.
+type ErrorRulesListerExpansion interface{}
+
+// ErrorRulesNamespaceListerExpansion allows custom methods to be added to
+// ErrorRulesNamespaceLister.
+type ErrorRulesNamespaceListerExpansion interface{}

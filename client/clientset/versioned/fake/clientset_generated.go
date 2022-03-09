@@ -50,6 +50,8 @@ import (
 	fakehttpv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/http/v1alpha1/fake"
 	k8sv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/k8s/v1alpha1"
 	fakek8sv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/k8s/v1alpha1/fake"
+	keyv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/key/v1alpha1"
+	fakekeyv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/key/v1alpha1/fake"
 	maintenancev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/maintenance/v1alpha1"
 	fakemaintenancev1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/maintenance/v1alpha1/fake"
 	managementv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/management/v1alpha1"
@@ -70,6 +72,10 @@ import (
 	fakeslov1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/slo/v1alpha1/fake"
 	spanv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/span/v1alpha1"
 	fakespanv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/span/v1alpha1/fake"
+	userv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/user/v1alpha1"
+	fakeuserv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/user/v1alpha1/fake"
+	webv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/web/v1alpha1"
+	fakewebv1alpha1 "kubeform.dev/provider-dynatrace-api/client/clientset/versioned/typed/web/v1alpha1/fake"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
@@ -200,6 +206,11 @@ func (c *Clientset) K8sV1alpha1() k8sv1alpha1.K8sV1alpha1Interface {
 	return &fakek8sv1alpha1.FakeK8sV1alpha1{Fake: &c.Fake}
 }
 
+// KeyV1alpha1 retrieves the KeyV1alpha1Client
+func (c *Clientset) KeyV1alpha1() keyv1alpha1.KeyV1alpha1Interface {
+	return &fakekeyv1alpha1.FakeKeyV1alpha1{Fake: &c.Fake}
+}
+
 // MaintenanceV1alpha1 retrieves the MaintenanceV1alpha1Client
 func (c *Clientset) MaintenanceV1alpha1() maintenancev1alpha1.MaintenanceV1alpha1Interface {
 	return &fakemaintenancev1alpha1.FakeMaintenanceV1alpha1{Fake: &c.Fake}
@@ -248,4 +259,14 @@ func (c *Clientset) SloV1alpha1() slov1alpha1.SloV1alpha1Interface {
 // SpanV1alpha1 retrieves the SpanV1alpha1Client
 func (c *Clientset) SpanV1alpha1() spanv1alpha1.SpanV1alpha1Interface {
 	return &fakespanv1alpha1.FakeSpanV1alpha1{Fake: &c.Fake}
+}
+
+// UserV1alpha1 retrieves the UserV1alpha1Client
+func (c *Clientset) UserV1alpha1() userv1alpha1.UserV1alpha1Interface {
+	return &fakeuserv1alpha1.FakeUserV1alpha1{Fake: &c.Fake}
+}
+
+// WebV1alpha1 retrieves the WebV1alpha1Client
+func (c *Clientset) WebV1alpha1() webv1alpha1.WebV1alpha1Interface {
+	return &fakewebv1alpha1.FakeWebV1alpha1{Fake: &c.Fake}
 }

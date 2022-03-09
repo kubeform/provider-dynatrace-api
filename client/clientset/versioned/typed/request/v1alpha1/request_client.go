@@ -28,6 +28,8 @@ import (
 type RequestV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	AttributesGetter
+	NamingsGetter
+	NamingsesGetter
 }
 
 // RequestV1alpha1Client is used to interact with features provided by the request.dynatrace.kubeform.com group.
@@ -37,6 +39,14 @@ type RequestV1alpha1Client struct {
 
 func (c *RequestV1alpha1Client) Attributes(namespace string) AttributeInterface {
 	return newAttributes(c, namespace)
+}
+
+func (c *RequestV1alpha1Client) Namings(namespace string) NamingInterface {
+	return newNamings(c, namespace)
+}
+
+func (c *RequestV1alpha1Client) Namingses(namespace string) NamingsInterface {
+	return newNamingses(c, namespace)
 }
 
 // NewForConfig creates a new RequestV1alpha1Client for the given config.
