@@ -218,7 +218,6 @@ spec:
                 required:
                 - apdex
                 - beaconEndpointType
-                - beaconEndpointURL
                 - name
                 type: object
               state:
@@ -384,7 +383,6 @@ spec:
                 required:
                 - apdex
                 - beaconEndpointType
-                - beaconEndpointURL
                 - name
                 type: object
               terminationPolicy:

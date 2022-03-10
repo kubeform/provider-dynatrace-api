@@ -1,0 +1,2667 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: applications.web.dynatrace.kubeform.com
+spec:
+  group: web.dynatrace.kubeform.com
+  names:
+    kind: Application
+    listKind: ApplicationList
+    plural: applications
+    singular: application
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              backendRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  conversionGoals:
+                    description: A list of conversion goals of the application
+                    properties:
+                      goal:
+                        description: A conversion goal of the application
+                        items:
+                          properties:
+                            ID:
+                              description: "The ID of conversion goal. \n  Omit it
+                                while creating a new conversion goal"
+                              type: string
+                            destination:
+                              description: Configuration of a destination-based conversion
+                                goal
+                              properties:
+                                caseSensitive:
+                                  description: The match is case-sensitive (`true`)
+                                    or (`false`)
+                                  type: boolean
+                                matchType:
+                                  description: The operator of the match. Possible
+                                    values are `Begins`, `Contains` and `Ends`.
+                                  type: string
+                                urlOrPath:
+                                  description: The path to be reached to hit the conversion
+                                    goal
+                                  type: string
+                              required:
+                              - urlOrPath
+                              type: object
+                            name:
+                              description: The name of the conversion goal. Valid
+                                length within 1 and 50 characters.
+                              type: string
+                            type:
+                              description: The type of the conversion goal. Possible
+                                values are `Destination`, `UserAction`, `VisitDuration`
+                                and `VisitNumActions`
+                              type: string
+                            userAction:
+                              description: Configuration of a destination-based conversion
+                                goal
+                              properties:
+                                actionType:
+                                  description: Type of the action to which the rule
+                                    applies. Possible values are `Custom`, `Load`
+                                    and `Xhr`.
+                                  type: string
+                                caseSensitive:
+                                  description: The match is case-sensitive (`true`)
+                                    or (`false`)
+                                  type: boolean
+                                matchEntity:
+                                  description: The type of the entity to which the
+                                    rule applies. Possible values are `ActionName`,
+                                    `CssSelector`, `JavaScriptVariable`, `MetaTag`,
+                                    `PagePath`, `PageTitle`, `PageUrl`, `UrlAnchor`
+                                    and `XhrUrl`.
+                                  type: string
+                                matchType:
+                                  description: The operator of the match. Possible
+                                    values are `Begins`, `Contains` and `Ends`.
+                                  type: string
+                                value:
+                                  description: The value to be matched to hit the
+                                    conversion goal
+                                  type: string
+                              type: object
+                            visitDuration:
+                              description: Configuration of a destination-based conversion
+                                goal
+                              properties:
+                                duration:
+                                  description: The duration of session to hit the
+                                    conversion goal, in milliseconds
+                                  format: int64
+                                  type: integer
+                              required:
+                              - duration
+                              type: object
+                            visitNumAction:
+                              description: Configuration of a destination-based conversion
+                                goal
+                              properties:
+                                numUserActions:
+                                  description: The number of user actions to hit the
+                                    conversion goal
+                                  format: int64
+                                  type: integer
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        minItems: 1
+                        type: array
+                    required:
+                    - goal
+                    type: object
+                  costControlUserSessionPercentage:
+                    description: Analize *X*% of user sessions
+                    format: int64
+                    type: integer
+                  customActionApdexSettings:
+                    description: Defines the Custom Action Apdex settings of an application
+                    properties:
+                      frustratingFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a tolerable user experience, when the configured KPM is
+                          not available. Values between 0 and 240000 are allowed.
+                        format: int64
+                        type: integer
+                      frustratingThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          tolerable user experience. Values between 0 and 240000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                      threshold:
+                        description: no documentation available
+                        format: int64
+                        type: integer
+                      toleratedFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a satisfied user experience, when the configured KPM is
+                          not available. Values between 0 and 60000 are allowed.
+                        format: int64
+                        type: integer
+                      toleratedThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          satisfied user experience. Values between 0 and 60000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                    type: object
+                  id:
+                    type: string
+                  keyUserActions:
+                    description: User Action names to be flagged as Key User Actions
+                    items:
+                      properties:
+                        action:
+                          description: Configuration of the key user action
+                          items:
+                            properties:
+                              domain:
+                                description: The domain where the action is performed.
+                                type: string
+                              name:
+                                description: The name of the action
+                                type: string
+                              type:
+                                description: The type of the action. Possible values
+                                  are `Custom`, `Load` and `Xhr`.
+                                type: string
+                            required:
+                            - name
+                            - type
+                            type: object
+                          minItems: 1
+                          type: array
+                      required:
+                      - action
+                      type: object
+                    type: array
+                  loadActionApdexSettings:
+                    description: Defines the Load Action Apdex settings of an application
+                    properties:
+                      frustratingFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a tolerable user experience, when the configured KPM is
+                          not available. Values between 0 and 240000 are allowed.
+                        format: int64
+                        type: integer
+                      frustratingThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          tolerable user experience. Values between 0 and 240000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                      threshold:
+                        description: no documentation available
+                        format: int64
+                        type: integer
+                      toleratedFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a satisfied user experience, when the configured KPM is
+                          not available. Values between 0 and 60000 are allowed.
+                        format: int64
+                        type: integer
+                      toleratedThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          satisfied user experience. Values between 0 and 60000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                    type: object
+                  loadActionKeyPerformanceMetric:
+                    description: The key performance metric of load actions. Possible
+                      values are `ACTION_DURATION`, `CUMULATIVE_LAYOUT_SHIFT`, `DOM_INTERACTIVE`,
+                      `FIRST_INPUT_DELAY`, `LARGEST_CONTENTFUL_PAINT`, `LOAD_EVENT_END`,
+                      `LOAD_EVENT_START`, `RESPONSE_END`, `RESPONSE_START`, `SPEED_INDEX`
+                      and `VISUALLY_COMPLETE`
+                    type: string
+                  metaDataCaptureSettings:
+                    description: Java script agent meta data capture settings
+                    properties:
+                      capture:
+                        description: Java script agent meta data capture settings
+                        items:
+                          properties:
+                            capturingName:
+                              description: The name of the meta data to capture
+                              type: string
+                            name:
+                              description: Name for displaying the captured values
+                                in Dynatrace
+                              type: string
+                            publicMetadata:
+                              description: '`true` if this metadata should be captured
+                                regardless of the privacy settings, `false` otherwise'
+                              type: boolean
+                            type:
+                              description: The type of the meta data to capture. Possible
+                                values are `COOKIE`, `CSS_SELECTOR`, `JAVA_SCRIPT_FUNCTION`,
+                                `JAVA_SCRIPT_VARIABLE`, `META_TAG` and `QUERY_STRING`.
+                              type: string
+                            uniqueID:
+                              description: The unique ID of the meta data to capture
+                              format: int64
+                              type: integer
+                            useLastValue:
+                              description: '`true` if the last captured value should
+                                be used for this metadata. By default the first value
+                                will be used.'
+                              type: boolean
+                          required:
+                          - capturingName
+                          - name
+                          - type
+                          type: object
+                        type: array
+                    type: object
+                  monitoringSettings:
+                    description: Real user monitoring settings
+                    properties:
+                      addCrossOriginAnonymousAttribute:
+                        description: Add the cross origin = anonymous attribute to
+                          capture JavaScript error messages and W3C resource timings
+                        type: boolean
+                      advancedJavascriptTagSettings:
+                        description: Advanced JavaScript tag settings
+                        properties:
+                          additionalEventHandlers:
+                            description: Additional event handlers and wrappers
+                            properties:
+                              blur:
+                                description: Blur event handler enabled/disabled
+                                type: boolean
+                              change:
+                                description: Change event handler enabled/disabled
+                                type: boolean
+                              click:
+                                description: Click event handler enabled/disabled
+                                type: boolean
+                              maxDomNodes:
+                                description: Max. number of DOM nodes to instrument.
+                                  Valid values range from 0 to 100000.
+                                format: int64
+                                type: integer
+                              mouseup:
+                                description: Mouseup event handler enabled/disabled
+                                type: boolean
+                              toStringMethod:
+                                description: toString method enabled/disabled
+                                type: boolean
+                              useMouseUpEventForClicks:
+                                description: Use mouseup event for clicks enabled/disabled
+                                type: boolean
+                            required:
+                            - maxDomNodes
+                            type: object
+                          eventWrapperSettings:
+                            description: In addition to the event handlers, events
+                              called using `addEventListener` or `attachEvent` can
+                              be captured. Be careful with this option! Event wrappers
+                              can conflict with the JavaScript code on a web page
+                            properties:
+                              blur:
+                                description: Blur enabled/disabled
+                                type: boolean
+                              change:
+                                description: Change enabled/disabled
+                                type: boolean
+                              click:
+                                description: Click enabled/disabled
+                                type: boolean
+                              mouseup:
+                                description: MouseUp enabled/disabled
+                                type: boolean
+                              touchEnd:
+                                description: TouchEnd enabled/disabled
+                                type: boolean
+                              touchStart:
+                                description: TouchStart enabled/disabled
+                                type: boolean
+                            type: object
+                          globalEventCaptureSettings:
+                            description: Global event capture settings
+                            properties:
+                              additionalEventCapturedAsUserInput:
+                                description: "Additional events to be captured globally
+                                  as user input. \n For example `DragStart` or `DragEnd`.
+                                  Maximum 100 characters."
+                                type: string
+                              click:
+                                description: Click enabled/disabled
+                                type: boolean
+                              doubleclick:
+                                description: DoubleClick enabled/disabled
+                                type: boolean
+                              keydown:
+                                description: KeyDown enabled/disabled
+                                type: boolean
+                              keyup:
+                                description: KeyUp enabled/disabled
+                                type: boolean
+                              mousedown:
+                                description: MouseDown enabled/disabled
+                                type: boolean
+                              mouseup:
+                                description: MouseUp enabled/disabled
+                                type: boolean
+                              scroll:
+                                description: Scroll enabled/disabled
+                                type: boolean
+                            type: object
+                          instrumentUnsupportedAjaxFrameworks:
+                            description: Instrumentation of unsupported Ajax frameworks
+                              enabled/disabled
+                            type: boolean
+                          maxActionNameLength:
+                            description: Maximum character length for action names.
+                              Valid values range from 5 to 10000.
+                            format: int64
+                            type: integer
+                          maxErrorsToCapture:
+                            description: Maximum number of errors to be captured per
+                              page. Valid values range from 0 to 50.
+                            format: int64
+                            type: integer
+                          specialCharactersToEscape:
+                            description: Additional special characters that are to
+                              be escaped using non-alphanumeric characters in HTML
+                              escape format. Maximum length 30 character. Allowed
+                              characters are `^`, `\`, `<` and `>`.
+                            type: string
+                          syncBeaconFirefox:
+                            description: Send the beacon signal as a synchronous XMLHttpRequest
+                              using Firefox enabled/disabled
+                            type: boolean
+                          syncBeaconInternetExplorer:
+                            description: Send the beacon signal as a synchronous XMLHttpRequest
+                              using Internet Explorer enabled/disabled
+                            type: boolean
+                        required:
+                        - maxActionNameLength
+                        - maxErrorsToCapture
+                        type: object
+                      angularPackageName:
+                        description: The name of the angular package
+                        type: string
+                      browserRestrictionSettings:
+                        description: Settings for restricting certain browser type,
+                          version, platform and, comparator. It also restricts the
+                          mode
+                        properties:
+                          mode:
+                            description: The mode of the list of browser restrictions.
+                              Possible values area `EXCLUDE` and `INCLUDE`.
+                            type: string
+                          restrictions:
+                            description: A list of browser restrictions
+                            properties:
+                              restriction:
+                                description: Browser exclusion rules for the browsers
+                                  that are to be excluded
+                                items:
+                                  properties:
+                                    browserType:
+                                      description: The type of the browser that is
+                                        used. Possible values are `ANDROID_WEBKIT`,
+                                        `BOTS_SPIDERS`, `CHROME`, `EDGE`, `FIREFOX`,
+                                        `INTERNET_EXPLORER, `OPERA` and `SAFARI`
+                                      type: string
+                                    browserVersion:
+                                      description: The version of the browser that
+                                        is used
+                                      type: string
+                                    comparator:
+                                      description: No documentation available. Possible
+                                        values are `EQUALS`, `GREATER_THAN_OR_EQUAL`
+                                        and `LOWER_THAN_OR_EQUAL`.
+                                      type: string
+                                    platform:
+                                      description: The platform on which the browser
+                                        is being used. Possible values are `ALL`,
+                                        `DESKTOP` and `MOBILE`
+                                      type: string
+                                  required:
+                                  - browserType
+                                  type: object
+                                minItems: 1
+                                type: array
+                            required:
+                            - restriction
+                            type: object
+                        required:
+                        - mode
+                        type: object
+                      cacheControlHeaderOptimizations:
+                        description: Optimize the value of cache control headers for
+                          use with Dynatrace real user monitoring enabled/disabled
+                        type: boolean
+                      contentCapture:
+                        description: Settings for content capture
+                        properties:
+                          javascriptErrors:
+                            description: JavaScript errors monitoring enabled/disabled
+                            type: boolean
+                          resourceTimingSettings:
+                            description: Settings for resource timings capture
+                            properties:
+                              instrumentationDelay:
+                                description: "Instrumentation delay for monitoring
+                                  resource and image resource impact in browsers that
+                                  don't offer W3C resource timings. \n Valid values
+                                  range from 0 to 9999. \n Only effective if `nonW3cResourceTimings`
+                                  is enabled"
+                                format: int64
+                                type: integer
+                              nonW3CResourceTimings:
+                                description: Timing for JavaScript files and images
+                                  on non-W3C supported browsers enabled/disabled
+                                type: boolean
+                              resourceTimingCaptureType:
+                                description: "Defines how detailed resource timings
+                                  are captured. \n Only effective if **w3cResourceTimings**
+                                  or **nonW3cResourceTimings** is enabled. Possible
+                                  values are `CAPTURE_ALL_SUMMARIES`, `CAPTURE_FULL_DETAILS`
+                                  and `CAPTURE_LIMITED_SUMMARIES`"
+                                type: string
+                              resourceTimingsDomainLimit:
+                                description: "Limits the number of domains for which
+                                  W3C resource timings are captured. \n Only effective
+                                  if **resourceTimingCaptureType** is `CAPTURE_LIMITED_SUMMARIES`.
+                                  Valid values range from 0 to 50."
+                                format: int64
+                                type: integer
+                              w3cResourceTimings:
+                                description: W3C resource timings for third party/CDN
+                                  enabled/disabled
+                                type: boolean
+                            required:
+                            - instrumentationDelay
+                            - resourceTimingCaptureType
+                            - resourceTimingsDomainLimit
+                            type: object
+                          timeoutSettings:
+                            description: Settings for timed action capture
+                            properties:
+                              temporaryActionLimit:
+                                description: Defines how deep temporary actions may
+                                  cascade. 0 disables temporary actions completely.
+                                  Recommended value if enabled is 3
+                                format: int64
+                                type: integer
+                              temporaryActionTotalTimeout:
+                                description: The total timeout of all cascaded timeouts
+                                  that should still be able to create a temporary
+                                  action
+                                format: int64
+                                type: integer
+                              timedActionSupport:
+                                description: "Timed action support enabled/disabled.
+                                  \n Enable to detect actions that trigger sending
+                                  of XHRs via `setTimout` methods"
+                                type: boolean
+                            required:
+                            - temporaryActionLimit
+                            - temporaryActionTotalTimeout
+                            type: object
+                          visuallyCompleteAndSpeedIndex:
+                            description: Visually complete and Speed index support
+                              enabled/disabled
+                            type: boolean
+                          visuallyCompleteSettings:
+                            description: Settings for VisuallyComplete
+                            properties:
+                              excludeURLRegex:
+                                description: A RegularExpression used to exclude images
+                                  and iframes from being detected by the VC module
+                                type: string
+                              ignoredMutationsList:
+                                description: Query selector for mutation nodes to
+                                  ignore in VC and SI calculation
+                                type: string
+                              inactivityTimeout:
+                                description: The time in ms the VC module waits for
+                                  no mutations happening on the page after the load
+                                  action. Defaults to 1000. Valid values range from
+                                  0 to 30000.
+                                format: int64
+                                type: integer
+                              mutationTimeout:
+                                description: Determines the time in ms VC waits after
+                                  an action closes to start calculation. Defaults
+                                  to 50. Valid values range from 0 to 5000.
+                                format: int64
+                                type: integer
+                              threshold:
+                                description: Minimum visible area in pixels of elements
+                                  to be counted towards VC and SI. Defaults to 50.
+                                  Valid values range from 0 to 10000.
+                                format: int64
+                                type: integer
+                            type: object
+                        type: object
+                      cookiePlacementDomain:
+                        description: Domain for cookie placement. Maximum 150 characters.
+                        type: string
+                      correlationHeaderInclusionRegex:
+                        description: "To enable RUM for XHR calls to AWS Lambda, define
+                          a regular expression matching these calls, Dynatrace can
+                          then automatically add a custom header (`x-dtc`) to each
+                          such request to the respective endpoints in AWS. \n Important:
+                          These endpoints must accept the `x-dtc` header, or the requests
+                          will fail"
+                        type: string
+                      customConfigurationProperties:
+                        description: "The location to send monitoring data from the
+                          JavaScript tag. \n  Specify either a relative or an absolute
+                          URL. If you use an absolute URL, data will be sent using
+                          CORS. \n  **Required** for auto-injected applications, optional
+                          for agentless applications. Maximum 512 characters."
+                        type: string
+                      excludeXhrRegex:
+                        description: "You can exclude some actions from becoming XHR
+                          actions. \n Put a regular expression, matching all the required
+                          URLs, here. \n If noting specified the feature is disabled"
+                        type: string
+                      fetchRequests:
+                        description: '`fetch()` request capture enabled/disabled'
+                        type: boolean
+                      injectionMode:
+                        description: Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`,
+                          `INLINE_CODE` and `JAVASCRIPT_TAG`.
+                        type: string
+                      ipAddressRestrictionSettings:
+                        description: Settings for restricting certain ip addresses
+                          and for introducing subnet mask. It also restricts the mode
+                        properties:
+                          mode:
+                            description: The mode of the list of ip address restrictions.
+                              Possible values area `EXCLUDE` and `INCLUDE`.
+                            type: string
+                          restrictions:
+                            description: The IP addresses or the IP address ranges
+                              to be mapped to the location
+                            properties:
+                              range:
+                                description: The IP address or the IP address range
+                                  to be mapped to the location
+                                items:
+                                  properties:
+                                    address:
+                                      description: "The IP address to be mapped. \n
+                                        For an IP address range, this is the **from**
+                                        address."
+                                      type: string
+                                    addressTo:
+                                      description: The **to** address of the IP address
+                                        range.
+                                      type: string
+                                    subnetMask:
+                                      description: The subnet mask of the IP address
+                                        range. Valid values range from 0 to 128.
+                                      format: int64
+                                      type: integer
+                                  required:
+                                  - address
+                                  type: object
+                                minItems: 1
+                                type: array
+                            required:
+                            - range
+                            type: object
+                        required:
+                        - mode
+                        type: object
+                      javascriptFrameworkSupport:
+                        description: Support of various JavaScript frameworks
+                        properties:
+                          activeXObject:
+                            description: ActiveXObject support enabled/disabled
+                            type: boolean
+                          angular:
+                            description: AngularJS and Angular support enabled/disabled
+                            type: boolean
+                          dojo:
+                            description: Dojo support enabled/disabled
+                            type: boolean
+                          extjs:
+                            description: ExtJS, Sencha Touch support enabled/disabled
+                            type: boolean
+                          icefaces:
+                            description: ICEfaces support enabled/disabled
+                            type: boolean
+                          jquery:
+                            description: jQuery, Backbone.js support enabled/disabled
+                            type: boolean
+                          mooTools:
+                            description: MooTools support enabled/disabled
+                            type: boolean
+                          prototype:
+                            description: Prototype support enabled/disabled
+                            type: boolean
+                        type: object
+                      javascriptInjectionRules:
+                        description: Java script injection rules
+                        properties:
+                          rule:
+                            description: Java script injection rule
+                            items:
+                              properties:
+                                enabled:
+                                  description: '`fetch()` request capture enabled/disabled'
+                                  type: boolean
+                                htmlPattern:
+                                  description: The HTML pattern of the java script
+                                    injection
+                                  type: string
+                                rule:
+                                  description: The url rule of the java script injection.
+                                    Possible values are `AFTER_SPECIFIC_HTML`, `AUTOMATIC_INJECTION`,
+                                    `BEFORE_SPECIFIC_HTML` and `DO_NOT_INJECT`.
+                                  type: string
+                                target:
+                                  description: The target against which the rule of
+                                    the java script injection should be matched. Possible
+                                    values are `PAGE_QUERY` and `URL`.
+                                  type: string
+                                urlOperator:
+                                  description: The url operator of the java script
+                                    injection. Possible values are `ALL_PAGES`, `CONTAINS`,
+                                    `ENDS_WITH`, `EQUALS` and `STARTS_WITH`.
+                                  type: string
+                                urlPattern:
+                                  description: The url pattern of the java script
+                                    injection
+                                  type: string
+                              required:
+                              - rule
+                              - urlOperator
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - rule
+                        type: object
+                      libraryFileLocation:
+                        description: "The location of your application’s custom JavaScript
+                          library file. \n  If nothing specified the root directory
+                          of your web server is used. \n  **Required** for auto-injected
+                          applications, not supported by agentless applications. Maximum
+                          512 characters."
+                        type: string
+                      monitoringDataPath:
+                        description: "The location to send monitoring data from the
+                          JavaScript tag. \n  Specify either a relative or an absolute
+                          URL. If you use an absolute URL, data will be sent using
+                          CORS. \n  **Required** for auto-injected applications, optional
+                          for agentless applications. Maximum 512 characters."
+                        type: string
+                      scriptTagCacheDurationInHours:
+                        description: Time duration for the cache settings
+                        format: int64
+                        type: integer
+                      secureCookieAttribute:
+                        description: Secure attribute usage for Dynatrace cookies
+                          enabled/disabled
+                        type: boolean
+                      serverRequestPathID:
+                        description: Path to identify the server’s request ID. Maximum
+                          150 characters.
+                        type: string
+                      xmlHTTPRequest:
+                        description: '`XmlHttpRequest` support enabled/disabled'
+                        type: boolean
+                    required:
+                    - contentCapture
+                    - injectionMode
+                    type: object
+                  name:
+                    description: The name of the web application, displayed in the
+                      UI
+                    type: string
+                  realUserMonitoringEnabled:
+                    description: Real user monitoring enabled/disabled
+                    type: boolean
+                  sessionReplayConfig:
+                    description: Settings regarding Session Replay
+                    properties:
+                      costControlPercentage:
+                        description: Session replay sampling rating in percent
+                        format: int64
+                        type: integer
+                      cssResourceCapturingExclusionRules:
+                        description: A list of URLs to be excluded from CSS resource
+                          capturing
+                        items:
+                          type: string
+                        type: array
+                      enableCssResourceCapturing:
+                        description: Capture (`true`) or don't capture (`false`) CSS
+                          resources from the session
+                        type: boolean
+                      enabled:
+                        description: SessionReplay Enabled/Disabled
+                        type: boolean
+                    required:
+                    - costControlPercentage
+                    type: object
+                  type:
+                    description: The type of the web application. Possible values
+                      are `AUTO_INJECTED`, `BROWSER_EXTENSION_INJECTED` and `MANUALLY_INJECTED`
+                    type: string
+                  urlInjectionPattern:
+                    description: URL injection pattern for manual web application
+                    type: string
+                  userActionAndSessionProperties:
+                    description: User action and session properties settings
+                    properties:
+                      property:
+                        description: User action and session properties settings
+                        properties:
+                          ID:
+                            description: Unique id among all userTags and properties
+                              of this application
+                            format: int64
+                            type: integer
+                          aggregation:
+                            description: "The aggregation type of the property. \n
+                              \  It defines how multiple values of the property are
+                              aggregated. Possible values are `AVERAGE`, `FIRST`,
+                              `LAST`, `MAXIMUM`, `MINIMUM` and `SUM`."
+                            type: string
+                          cleanupRule:
+                            description: "The cleanup rule of the property. \n Defines
+                              how to extract the data you need from a string value.
+                              Specify the [regular expression](https://dt-url.net/k9e0iaq)
+                              for the data you need there"
+                            type: string
+                          displayName:
+                            description: The display name of the property
+                            type: string
+                          ignoreCase:
+                            description: If `true`, the value of this property will
+                              always be stored in lower case. Defaults to `false`.
+                            type: boolean
+                          key:
+                            description: Key of the property
+                            type: string
+                          longStringLength:
+                            description: If the `type` is `LONG_STRING`, the max length
+                              for this property. Must be a multiple of `100`. Defaults
+                              to `200`. Maximum is `1000`.
+                            format: int64
+                            type: integer
+                          metadataID:
+                            description: If the origin is `META_DATA`, metaData id
+                              of the property
+                            format: int64
+                            type: integer
+                          origin:
+                            description: The origin of the property. Possible values
+                              are `JAVASCRIPT_API`, `META_DATA` and `SERVER_SIDE_REQUEST_ATTRIBUTE`.
+                            type: string
+                          serverSideRequestAttribute:
+                            description: "The ID of the request attribute. \n Only
+                              applicable when the **origin** is set to `SERVER_SIDE_REQUEST_ATTRIBUTE`"
+                            type: string
+                          storeAsSessionProperty:
+                            description: If `true`, the property is stored as a session
+                              property
+                            type: boolean
+                          storeAsUserActionProperty:
+                            description: If `true`, the property is stored as a user
+                              action property
+                            type: boolean
+                          type:
+                            description: The data type of the property. Possible values
+                              are `DATE`, `DOUBLE`, `LONG`, `LONG_STRING` and `STRING`.
+                            type: string
+                        required:
+                        - ID
+                        - key
+                        - origin
+                        - type
+                        type: object
+                    type: object
+                  userActionNamingSettings:
+                    description: The settings of user action naming
+                    properties:
+                      customActionNamingRules:
+                        description: User action naming rules for custom actions
+                        properties:
+                          rule:
+                            description: The settings of naming rule
+                            items:
+                              properties:
+                                conditions:
+                                  description: Defines the conditions when the naming
+                                    rule should apply
+                                  properties:
+                                    condition:
+                                      description: Defines the conditions when the
+                                        naming rule should apply
+                                      items:
+                                        properties:
+                                          operand1:
+                                            description: Must be a defined placeholder
+                                              wrapped in curly braces
+                                            type: string
+                                          operand2:
+                                            description: Must be null if operator
+                                              is `IS_EMPTY`, a regex if operator is
+                                              `MATCHES_REGULAR_ERPRESSION`. In all
+                                              other cases the value can be a freetext
+                                              or a placeholder wrapped in curly braces
+                                            type: string
+                                          operator:
+                                            description: The operator of the condition.
+                                              Possible values are `CONTAINS`, `ENDS_WITH`,
+                                              `EQUALS`, `IS_EMPTY`, `IS_NOT_EMPTY`,
+                                              `MATCHES_REGULAR_EXPRESSION`, `NOT_CONTAINS`,
+                                              `NOT_ENDS_WITH`, `NOT_EQUALS`, `NOT_MATCHES_REGULAR_EXPRESSION`,
+                                              `NOT_STARTS_WITH` and `STARTS_WITH`.
+                                            type: string
+                                        required:
+                                        - operand1
+                                        - operator
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - condition
+                                  type: object
+                                template:
+                                  description: Naming pattern. Use Curly brackets
+                                    `{}` to select placeholders
+                                  type: string
+                                useOrConditions:
+                                  description: If set to `true` the conditions will
+                                    be connected by logical OR instead of logical
+                                    AND
+                                  type: boolean
+                              required:
+                              - template
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - rule
+                        type: object
+                      ignoreCase:
+                        description: Case insensitive naming
+                        type: boolean
+                      loadActionNamingRules:
+                        description: User action naming rules for loading actions
+                        properties:
+                          rule:
+                            description: The settings of naming rule
+                            items:
+                              properties:
+                                conditions:
+                                  description: Defines the conditions when the naming
+                                    rule should apply
+                                  properties:
+                                    condition:
+                                      description: Defines the conditions when the
+                                        naming rule should apply
+                                      items:
+                                        properties:
+                                          operand1:
+                                            description: Must be a defined placeholder
+                                              wrapped in curly braces
+                                            type: string
+                                          operand2:
+                                            description: Must be null if operator
+                                              is `IS_EMPTY`, a regex if operator is
+                                              `MATCHES_REGULAR_ERPRESSION`. In all
+                                              other cases the value can be a freetext
+                                              or a placeholder wrapped in curly braces
+                                            type: string
+                                          operator:
+                                            description: The operator of the condition.
+                                              Possible values are `CONTAINS`, `ENDS_WITH`,
+                                              `EQUALS`, `IS_EMPTY`, `IS_NOT_EMPTY`,
+                                              `MATCHES_REGULAR_EXPRESSION`, `NOT_CONTAINS`,
+                                              `NOT_ENDS_WITH`, `NOT_EQUALS`, `NOT_MATCHES_REGULAR_EXPRESSION`,
+                                              `NOT_STARTS_WITH` and `STARTS_WITH`.
+                                            type: string
+                                        required:
+                                        - operand1
+                                        - operator
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - condition
+                                  type: object
+                                template:
+                                  description: Naming pattern. Use Curly brackets
+                                    `{}` to select placeholders
+                                  type: string
+                                useOrConditions:
+                                  description: If set to `true` the conditions will
+                                    be connected by logical OR instead of logical
+                                    AND
+                                  type: boolean
+                              required:
+                              - template
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - rule
+                        type: object
+                      placeholders:
+                        description: User action placeholders
+                        properties:
+                          placeholder:
+                            description: User action placeholders
+                            items:
+                              properties:
+                                input:
+                                  description: The input for the place holder. Possible
+                                    values are `ELEMENT_IDENTIFIER`, `INPUT_TYPE`,
+                                    `METADATA`, `PAGE_TITLE`, `PAGE_URL`, `SOURCE_URL`,
+                                    `TOP_XHR_URL` and `XHR_URL`
+                                  type: string
+                                metadataID:
+                                  description: The ID of the metadata
+                                  format: int64
+                                  type: integer
+                                name:
+                                  description: Placeholder name. Valid length needs
+                                    to be between 1 and 50 characters
+                                  type: string
+                                processingPart:
+                                  description: The part to process. Possible values
+                                    are `ALL`, `ANCHOR` and `PATH`
+                                  type: string
+                                processingSteps:
+                                  description: The processing step settings
+                                  properties:
+                                    step:
+                                      description: The processing step
+                                      items:
+                                        properties:
+                                          fallbackToInput:
+                                            description: "If set to `true`: Returns
+                                              the input if `patternBefore` or `patternAfter`
+                                              cannot be found and the `type` is `SUBSTRING`.
+                                              Returns the input if `regularExpression`
+                                              doesn't match and `type` is `EXTRACT_BY_REGULAR_EXPRESSION`.
+                                              \n  Otherwise `null` is returned."
+                                            type: boolean
+                                          patternAfter:
+                                            description: The pattern after the required
+                                              value. It will be removed.
+                                            type: string
+                                          patternAfterSearchType:
+                                            description: The required occurrence of
+                                              **patternAfter**. Possible values are
+                                              `FIRST` and `LAST`.
+                                            type: string
+                                          patternBefore:
+                                            description: The pattern before the required
+                                              value. It will be removed.
+                                            type: string
+                                          patternBeforeSearchType:
+                                            description: The required occurrence of
+                                              **patternBefore**. Possible values are
+                                              `FIRST` and `LAST`.
+                                            type: string
+                                          patternToReplace:
+                                            description: "The pattern to be replaced.
+                                              \n  Only applicable if the `type` is
+                                              `REPLACE_WITH_PATTERN`."
+                                            type: string
+                                          regularExpression:
+                                            description: A regular expression for
+                                              the string to be extracted or replaced.
+                                              Only applicable if the `type` is `EXTRACT_BY_REGULAR_EXPRESSION`
+                                              or `REPLACE_WITH_REGULAR_EXPRESSION`.
+                                            type: string
+                                          replacement:
+                                            description: Replacement for the original
+                                              value
+                                            type: string
+                                          type:
+                                            description: "An action to be taken by
+                                              the processing: \n * `SUBSTRING`: Extracts
+                                              the string between `patternBefore` and
+                                              `patternAfter`. * `REPLACEMENT`: Replaces
+                                              the string between `patternBefore` and
+                                              `patternAfter` with the specified `replacement`.
+                                              * `REPLACE_WITH_PATTERN`: Replaces the
+                                              **patternToReplace** with the specified
+                                              **replacement**. * `EXTRACT_BY_REGULAR_EXPRESSION`:
+                                              Extracts the part of the string that
+                                              matches the **regularExpression**. *
+                                              `REPLACE_WITH_REGULAR_EXPRESSION`: Replaces
+                                              all occurrences that match **regularExpression**
+                                              with the specified **replacement**.
+                                              * `REPLACE_IDS`: Replaces all IDs and
+                                              UUIDs with the specified **replacement**.
+                                              Possible values are `EXTRACT_BY_REGULAR_EXPRESSION`,
+                                              `REPLACEMENT`, `REPLACE_IDS`, `REPLACE_WITH_PATTERN`,
+                                              `REPLACE_WITH_REGULAR_EXPRESSION` and
+                                              `SUBSTRING`."
+                                            type: string
+                                        required:
+                                        - type
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - step
+                                  type: object
+                                useGuessedElementIdentifier:
+                                  description: Use the element identifier that was
+                                    selected by Dynatrace
+                                  type: boolean
+                              required:
+                              - input
+                              - name
+                              - processingPart
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - placeholder
+                        type: object
+                      queryParameterCleanups:
+                        description: User action naming rules for custom actions
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      splitUserActionsByDomain:
+                        description: Deactivate this setting if different domains
+                          should not result in separate user actions
+                        type: boolean
+                      useFirstDetectedLoadAction:
+                        description: First load action found under an XHR action should
+                          be used when true. Else the deepest one under the xhr action
+                          is used
+                        type: boolean
+                      xhrActionNamingRules:
+                        description: User action naming rules for XHR actions
+                        properties:
+                          rule:
+                            description: The settings of naming rule
+                            items:
+                              properties:
+                                conditions:
+                                  description: Defines the conditions when the naming
+                                    rule should apply
+                                  properties:
+                                    condition:
+                                      description: Defines the conditions when the
+                                        naming rule should apply
+                                      items:
+                                        properties:
+                                          operand1:
+                                            description: Must be a defined placeholder
+                                              wrapped in curly braces
+                                            type: string
+                                          operand2:
+                                            description: Must be null if operator
+                                              is `IS_EMPTY`, a regex if operator is
+                                              `MATCHES_REGULAR_ERPRESSION`. In all
+                                              other cases the value can be a freetext
+                                              or a placeholder wrapped in curly braces
+                                            type: string
+                                          operator:
+                                            description: The operator of the condition.
+                                              Possible values are `CONTAINS`, `ENDS_WITH`,
+                                              `EQUALS`, `IS_EMPTY`, `IS_NOT_EMPTY`,
+                                              `MATCHES_REGULAR_EXPRESSION`, `NOT_CONTAINS`,
+                                              `NOT_ENDS_WITH`, `NOT_EQUALS`, `NOT_MATCHES_REGULAR_EXPRESSION`,
+                                              `NOT_STARTS_WITH` and `STARTS_WITH`.
+                                            type: string
+                                        required:
+                                        - operand1
+                                        - operator
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - condition
+                                  type: object
+                                template:
+                                  description: Naming pattern. Use Curly brackets
+                                    `{}` to select placeholders
+                                  type: string
+                                useOrConditions:
+                                  description: If set to `true` the conditions will
+                                    be connected by logical OR instead of logical
+                                    AND
+                                  type: boolean
+                              required:
+                              - template
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - rule
+                        type: object
+                    type: object
+                  userTags:
+                    description: User tags settings
+                    properties:
+                      tag:
+                        description: User tag settings
+                        items:
+                          properties:
+                            ID:
+                              description: A unique ID among all userTags and properties
+                                of this application. Minimum value is 1.
+                              format: int64
+                              type: integer
+                            cleanupRule:
+                              description: Cleanup rule expression of the userTag
+                              type: string
+                            ignoreCase:
+                              description: If `true`, the value of this tag will always
+                                be stored in lower case. Defaults to `false`.
+                              type: boolean
+                            metadataID:
+                              description: If it's of type metaData, metaData id of
+                                the userTag
+                              format: int64
+                              type: integer
+                            serverSideRequestAttribute:
+                              description: The ID of the RrequestAttribute for the
+                                userTag
+                              type: string
+                          required:
+                          - ID
+                          type: object
+                        minItems: 1
+                        type: array
+                    required:
+                    - tag
+                    type: object
+                  waterfallSettings:
+                    description: These settings influence the monitoring data you
+                      receive for 3rd party, CDN, and 1st party resources
+                    properties:
+                      resourceBrowserCachingThreshold:
+                        description: Warn about resources with a lower browser cache
+                          rate above *X*%. Values between 1 and 100 are allowed.
+                        format: int64
+                        type: integer
+                      resourcesThreshold:
+                        description: Warn about resources larger than *X* bytes. Values
+                          between 0 and 99999000 are allowed.
+                        format: int64
+                        type: integer
+                      slowCndResourcesThreshold:
+                        description: Warn about slow CDN resources with a response
+                          time above *X* ms. Values between 0 and 99999000 are allowed.
+                        format: int64
+                        type: integer
+                      slowFirstPartyResourcesThreshold:
+                        description: Warn about slow 1st party resources with a response
+                          time above *X* ms. Values between 0 and 99999000 are allowed.
+                        format: int64
+                        type: integer
+                      slowThirdPartyResourcesThreshold:
+                        description: Warn about slow 3rd party resources with a response
+                          time above *X* ms. Values between 0 and 99999000 are allowed.
+                        format: int64
+                        type: integer
+                      speedIndexVisuallyCompleteRatioThreshold:
+                        description: Warn if Speed index exceeds *X* % of Visually
+                          complete. Values between 1 and 99 are allowed.
+                        format: int64
+                        type: integer
+                      uncompressedResourcesThreshold:
+                        description: Warn about uncompressed resources larger than
+                          *X* bytes. Values between 0 and 99999 are allowed.
+                        format: int64
+                        type: integer
+                    required:
+                    - resourceBrowserCachingThreshold
+                    - resourcesThreshold
+                    - slowCndResourcesThreshold
+                    - slowFirstPartyResourcesThreshold
+                    - slowThirdPartyResourcesThreshold
+                    - speedIndexVisuallyCompleteRatioThreshold
+                    - uncompressedResourcesThreshold
+                    type: object
+                  xhrActionApdexSettings:
+                    description: Defines the XHR Action Apdex settings of an application
+                    properties:
+                      frustratingFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a tolerable user experience, when the configured KPM is
+                          not available. Values between 0 and 240000 are allowed.
+                        format: int64
+                        type: integer
+                      frustratingThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          tolerable user experience. Values between 0 and 240000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                      threshold:
+                        description: no documentation available
+                        format: int64
+                        type: integer
+                      toleratedFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a satisfied user experience, when the configured KPM is
+                          not available. Values between 0 and 60000 are allowed.
+                        format: int64
+                        type: integer
+                      toleratedThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          satisfied user experience. Values between 0 and 60000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                    type: object
+                  xhrActionKeyPerformanceMetric:
+                    description: The key performance metric of XHR actions. Possible
+                      values are `ACTION_DURATION`, `RESPONSE_END`, `RESPONSE_START`
+                      and `VISUALLY_COMPLETE`.
+                    type: string
+                required:
+                - costControlUserSessionPercentage
+                - customActionApdexSettings
+                - loadActionApdexSettings
+                - loadActionKeyPerformanceMetric
+                - monitoringSettings
+                - name
+                - type
+                - waterfallSettings
+                - xhrActionApdexSettings
+                - xhrActionKeyPerformanceMetric
+                type: object
+              state:
+                properties:
+                  conversionGoals:
+                    description: A list of conversion goals of the application
+                    properties:
+                      goal:
+                        description: A conversion goal of the application
+                        items:
+                          properties:
+                            ID:
+                              description: "The ID of conversion goal. \n  Omit it
+                                while creating a new conversion goal"
+                              type: string
+                            destination:
+                              description: Configuration of a destination-based conversion
+                                goal
+                              properties:
+                                caseSensitive:
+                                  description: The match is case-sensitive (`true`)
+                                    or (`false`)
+                                  type: boolean
+                                matchType:
+                                  description: The operator of the match. Possible
+                                    values are `Begins`, `Contains` and `Ends`.
+                                  type: string
+                                urlOrPath:
+                                  description: The path to be reached to hit the conversion
+                                    goal
+                                  type: string
+                              required:
+                              - urlOrPath
+                              type: object
+                            name:
+                              description: The name of the conversion goal. Valid
+                                length within 1 and 50 characters.
+                              type: string
+                            type:
+                              description: The type of the conversion goal. Possible
+                                values are `Destination`, `UserAction`, `VisitDuration`
+                                and `VisitNumActions`
+                              type: string
+                            userAction:
+                              description: Configuration of a destination-based conversion
+                                goal
+                              properties:
+                                actionType:
+                                  description: Type of the action to which the rule
+                                    applies. Possible values are `Custom`, `Load`
+                                    and `Xhr`.
+                                  type: string
+                                caseSensitive:
+                                  description: The match is case-sensitive (`true`)
+                                    or (`false`)
+                                  type: boolean
+                                matchEntity:
+                                  description: The type of the entity to which the
+                                    rule applies. Possible values are `ActionName`,
+                                    `CssSelector`, `JavaScriptVariable`, `MetaTag`,
+                                    `PagePath`, `PageTitle`, `PageUrl`, `UrlAnchor`
+                                    and `XhrUrl`.
+                                  type: string
+                                matchType:
+                                  description: The operator of the match. Possible
+                                    values are `Begins`, `Contains` and `Ends`.
+                                  type: string
+                                value:
+                                  description: The value to be matched to hit the
+                                    conversion goal
+                                  type: string
+                              type: object
+                            visitDuration:
+                              description: Configuration of a destination-based conversion
+                                goal
+                              properties:
+                                duration:
+                                  description: The duration of session to hit the
+                                    conversion goal, in milliseconds
+                                  format: int64
+                                  type: integer
+                              required:
+                              - duration
+                              type: object
+                            visitNumAction:
+                              description: Configuration of a destination-based conversion
+                                goal
+                              properties:
+                                numUserActions:
+                                  description: The number of user actions to hit the
+                                    conversion goal
+                                  format: int64
+                                  type: integer
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        minItems: 1
+                        type: array
+                    required:
+                    - goal
+                    type: object
+                  costControlUserSessionPercentage:
+                    description: Analize *X*% of user sessions
+                    format: int64
+                    type: integer
+                  customActionApdexSettings:
+                    description: Defines the Custom Action Apdex settings of an application
+                    properties:
+                      frustratingFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a tolerable user experience, when the configured KPM is
+                          not available. Values between 0 and 240000 are allowed.
+                        format: int64
+                        type: integer
+                      frustratingThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          tolerable user experience. Values between 0 and 240000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                      threshold:
+                        description: no documentation available
+                        format: int64
+                        type: integer
+                      toleratedFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a satisfied user experience, when the configured KPM is
+                          not available. Values between 0 and 60000 are allowed.
+                        format: int64
+                        type: integer
+                      toleratedThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          satisfied user experience. Values between 0 and 60000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                    type: object
+                  id:
+                    type: string
+                  keyUserActions:
+                    description: User Action names to be flagged as Key User Actions
+                    items:
+                      properties:
+                        action:
+                          description: Configuration of the key user action
+                          items:
+                            properties:
+                              domain:
+                                description: The domain where the action is performed.
+                                type: string
+                              name:
+                                description: The name of the action
+                                type: string
+                              type:
+                                description: The type of the action. Possible values
+                                  are `Custom`, `Load` and `Xhr`.
+                                type: string
+                            required:
+                            - name
+                            - type
+                            type: object
+                          minItems: 1
+                          type: array
+                      required:
+                      - action
+                      type: object
+                    type: array
+                  loadActionApdexSettings:
+                    description: Defines the Load Action Apdex settings of an application
+                    properties:
+                      frustratingFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a tolerable user experience, when the configured KPM is
+                          not available. Values between 0 and 240000 are allowed.
+                        format: int64
+                        type: integer
+                      frustratingThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          tolerable user experience. Values between 0 and 240000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                      threshold:
+                        description: no documentation available
+                        format: int64
+                        type: integer
+                      toleratedFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a satisfied user experience, when the configured KPM is
+                          not available. Values between 0 and 60000 are allowed.
+                        format: int64
+                        type: integer
+                      toleratedThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          satisfied user experience. Values between 0 and 60000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                    type: object
+                  loadActionKeyPerformanceMetric:
+                    description: The key performance metric of load actions. Possible
+                      values are `ACTION_DURATION`, `CUMULATIVE_LAYOUT_SHIFT`, `DOM_INTERACTIVE`,
+                      `FIRST_INPUT_DELAY`, `LARGEST_CONTENTFUL_PAINT`, `LOAD_EVENT_END`,
+                      `LOAD_EVENT_START`, `RESPONSE_END`, `RESPONSE_START`, `SPEED_INDEX`
+                      and `VISUALLY_COMPLETE`
+                    type: string
+                  metaDataCaptureSettings:
+                    description: Java script agent meta data capture settings
+                    properties:
+                      capture:
+                        description: Java script agent meta data capture settings
+                        items:
+                          properties:
+                            capturingName:
+                              description: The name of the meta data to capture
+                              type: string
+                            name:
+                              description: Name for displaying the captured values
+                                in Dynatrace
+                              type: string
+                            publicMetadata:
+                              description: '`true` if this metadata should be captured
+                                regardless of the privacy settings, `false` otherwise'
+                              type: boolean
+                            type:
+                              description: The type of the meta data to capture. Possible
+                                values are `COOKIE`, `CSS_SELECTOR`, `JAVA_SCRIPT_FUNCTION`,
+                                `JAVA_SCRIPT_VARIABLE`, `META_TAG` and `QUERY_STRING`.
+                              type: string
+                            uniqueID:
+                              description: The unique ID of the meta data to capture
+                              format: int64
+                              type: integer
+                            useLastValue:
+                              description: '`true` if the last captured value should
+                                be used for this metadata. By default the first value
+                                will be used.'
+                              type: boolean
+                          required:
+                          - capturingName
+                          - name
+                          - type
+                          type: object
+                        type: array
+                    type: object
+                  monitoringSettings:
+                    description: Real user monitoring settings
+                    properties:
+                      addCrossOriginAnonymousAttribute:
+                        description: Add the cross origin = anonymous attribute to
+                          capture JavaScript error messages and W3C resource timings
+                        type: boolean
+                      advancedJavascriptTagSettings:
+                        description: Advanced JavaScript tag settings
+                        properties:
+                          additionalEventHandlers:
+                            description: Additional event handlers and wrappers
+                            properties:
+                              blur:
+                                description: Blur event handler enabled/disabled
+                                type: boolean
+                              change:
+                                description: Change event handler enabled/disabled
+                                type: boolean
+                              click:
+                                description: Click event handler enabled/disabled
+                                type: boolean
+                              maxDomNodes:
+                                description: Max. number of DOM nodes to instrument.
+                                  Valid values range from 0 to 100000.
+                                format: int64
+                                type: integer
+                              mouseup:
+                                description: Mouseup event handler enabled/disabled
+                                type: boolean
+                              toStringMethod:
+                                description: toString method enabled/disabled
+                                type: boolean
+                              useMouseUpEventForClicks:
+                                description: Use mouseup event for clicks enabled/disabled
+                                type: boolean
+                            required:
+                            - maxDomNodes
+                            type: object
+                          eventWrapperSettings:
+                            description: In addition to the event handlers, events
+                              called using `addEventListener` or `attachEvent` can
+                              be captured. Be careful with this option! Event wrappers
+                              can conflict with the JavaScript code on a web page
+                            properties:
+                              blur:
+                                description: Blur enabled/disabled
+                                type: boolean
+                              change:
+                                description: Change enabled/disabled
+                                type: boolean
+                              click:
+                                description: Click enabled/disabled
+                                type: boolean
+                              mouseup:
+                                description: MouseUp enabled/disabled
+                                type: boolean
+                              touchEnd:
+                                description: TouchEnd enabled/disabled
+                                type: boolean
+                              touchStart:
+                                description: TouchStart enabled/disabled
+                                type: boolean
+                            type: object
+                          globalEventCaptureSettings:
+                            description: Global event capture settings
+                            properties:
+                              additionalEventCapturedAsUserInput:
+                                description: "Additional events to be captured globally
+                                  as user input. \n For example `DragStart` or `DragEnd`.
+                                  Maximum 100 characters."
+                                type: string
+                              click:
+                                description: Click enabled/disabled
+                                type: boolean
+                              doubleclick:
+                                description: DoubleClick enabled/disabled
+                                type: boolean
+                              keydown:
+                                description: KeyDown enabled/disabled
+                                type: boolean
+                              keyup:
+                                description: KeyUp enabled/disabled
+                                type: boolean
+                              mousedown:
+                                description: MouseDown enabled/disabled
+                                type: boolean
+                              mouseup:
+                                description: MouseUp enabled/disabled
+                                type: boolean
+                              scroll:
+                                description: Scroll enabled/disabled
+                                type: boolean
+                            type: object
+                          instrumentUnsupportedAjaxFrameworks:
+                            description: Instrumentation of unsupported Ajax frameworks
+                              enabled/disabled
+                            type: boolean
+                          maxActionNameLength:
+                            description: Maximum character length for action names.
+                              Valid values range from 5 to 10000.
+                            format: int64
+                            type: integer
+                          maxErrorsToCapture:
+                            description: Maximum number of errors to be captured per
+                              page. Valid values range from 0 to 50.
+                            format: int64
+                            type: integer
+                          specialCharactersToEscape:
+                            description: Additional special characters that are to
+                              be escaped using non-alphanumeric characters in HTML
+                              escape format. Maximum length 30 character. Allowed
+                              characters are `^`, `\`, `<` and `>`.
+                            type: string
+                          syncBeaconFirefox:
+                            description: Send the beacon signal as a synchronous XMLHttpRequest
+                              using Firefox enabled/disabled
+                            type: boolean
+                          syncBeaconInternetExplorer:
+                            description: Send the beacon signal as a synchronous XMLHttpRequest
+                              using Internet Explorer enabled/disabled
+                            type: boolean
+                        required:
+                        - maxActionNameLength
+                        - maxErrorsToCapture
+                        type: object
+                      angularPackageName:
+                        description: The name of the angular package
+                        type: string
+                      browserRestrictionSettings:
+                        description: Settings for restricting certain browser type,
+                          version, platform and, comparator. It also restricts the
+                          mode
+                        properties:
+                          mode:
+                            description: The mode of the list of browser restrictions.
+                              Possible values area `EXCLUDE` and `INCLUDE`.
+                            type: string
+                          restrictions:
+                            description: A list of browser restrictions
+                            properties:
+                              restriction:
+                                description: Browser exclusion rules for the browsers
+                                  that are to be excluded
+                                items:
+                                  properties:
+                                    browserType:
+                                      description: The type of the browser that is
+                                        used. Possible values are `ANDROID_WEBKIT`,
+                                        `BOTS_SPIDERS`, `CHROME`, `EDGE`, `FIREFOX`,
+                                        `INTERNET_EXPLORER, `OPERA` and `SAFARI`
+                                      type: string
+                                    browserVersion:
+                                      description: The version of the browser that
+                                        is used
+                                      type: string
+                                    comparator:
+                                      description: No documentation available. Possible
+                                        values are `EQUALS`, `GREATER_THAN_OR_EQUAL`
+                                        and `LOWER_THAN_OR_EQUAL`.
+                                      type: string
+                                    platform:
+                                      description: The platform on which the browser
+                                        is being used. Possible values are `ALL`,
+                                        `DESKTOP` and `MOBILE`
+                                      type: string
+                                  required:
+                                  - browserType
+                                  type: object
+                                minItems: 1
+                                type: array
+                            required:
+                            - restriction
+                            type: object
+                        required:
+                        - mode
+                        type: object
+                      cacheControlHeaderOptimizations:
+                        description: Optimize the value of cache control headers for
+                          use with Dynatrace real user monitoring enabled/disabled
+                        type: boolean
+                      contentCapture:
+                        description: Settings for content capture
+                        properties:
+                          javascriptErrors:
+                            description: JavaScript errors monitoring enabled/disabled
+                            type: boolean
+                          resourceTimingSettings:
+                            description: Settings for resource timings capture
+                            properties:
+                              instrumentationDelay:
+                                description: "Instrumentation delay for monitoring
+                                  resource and image resource impact in browsers that
+                                  don't offer W3C resource timings. \n Valid values
+                                  range from 0 to 9999. \n Only effective if `nonW3cResourceTimings`
+                                  is enabled"
+                                format: int64
+                                type: integer
+                              nonW3CResourceTimings:
+                                description: Timing for JavaScript files and images
+                                  on non-W3C supported browsers enabled/disabled
+                                type: boolean
+                              resourceTimingCaptureType:
+                                description: "Defines how detailed resource timings
+                                  are captured. \n Only effective if **w3cResourceTimings**
+                                  or **nonW3cResourceTimings** is enabled. Possible
+                                  values are `CAPTURE_ALL_SUMMARIES`, `CAPTURE_FULL_DETAILS`
+                                  and `CAPTURE_LIMITED_SUMMARIES`"
+                                type: string
+                              resourceTimingsDomainLimit:
+                                description: "Limits the number of domains for which
+                                  W3C resource timings are captured. \n Only effective
+                                  if **resourceTimingCaptureType** is `CAPTURE_LIMITED_SUMMARIES`.
+                                  Valid values range from 0 to 50."
+                                format: int64
+                                type: integer
+                              w3cResourceTimings:
+                                description: W3C resource timings for third party/CDN
+                                  enabled/disabled
+                                type: boolean
+                            required:
+                            - instrumentationDelay
+                            - resourceTimingCaptureType
+                            - resourceTimingsDomainLimit
+                            type: object
+                          timeoutSettings:
+                            description: Settings for timed action capture
+                            properties:
+                              temporaryActionLimit:
+                                description: Defines how deep temporary actions may
+                                  cascade. 0 disables temporary actions completely.
+                                  Recommended value if enabled is 3
+                                format: int64
+                                type: integer
+                              temporaryActionTotalTimeout:
+                                description: The total timeout of all cascaded timeouts
+                                  that should still be able to create a temporary
+                                  action
+                                format: int64
+                                type: integer
+                              timedActionSupport:
+                                description: "Timed action support enabled/disabled.
+                                  \n Enable to detect actions that trigger sending
+                                  of XHRs via `setTimout` methods"
+                                type: boolean
+                            required:
+                            - temporaryActionLimit
+                            - temporaryActionTotalTimeout
+                            type: object
+                          visuallyCompleteAndSpeedIndex:
+                            description: Visually complete and Speed index support
+                              enabled/disabled
+                            type: boolean
+                          visuallyCompleteSettings:
+                            description: Settings for VisuallyComplete
+                            properties:
+                              excludeURLRegex:
+                                description: A RegularExpression used to exclude images
+                                  and iframes from being detected by the VC module
+                                type: string
+                              ignoredMutationsList:
+                                description: Query selector for mutation nodes to
+                                  ignore in VC and SI calculation
+                                type: string
+                              inactivityTimeout:
+                                description: The time in ms the VC module waits for
+                                  no mutations happening on the page after the load
+                                  action. Defaults to 1000. Valid values range from
+                                  0 to 30000.
+                                format: int64
+                                type: integer
+                              mutationTimeout:
+                                description: Determines the time in ms VC waits after
+                                  an action closes to start calculation. Defaults
+                                  to 50. Valid values range from 0 to 5000.
+                                format: int64
+                                type: integer
+                              threshold:
+                                description: Minimum visible area in pixels of elements
+                                  to be counted towards VC and SI. Defaults to 50.
+                                  Valid values range from 0 to 10000.
+                                format: int64
+                                type: integer
+                            type: object
+                        type: object
+                      cookiePlacementDomain:
+                        description: Domain for cookie placement. Maximum 150 characters.
+                        type: string
+                      correlationHeaderInclusionRegex:
+                        description: "To enable RUM for XHR calls to AWS Lambda, define
+                          a regular expression matching these calls, Dynatrace can
+                          then automatically add a custom header (`x-dtc`) to each
+                          such request to the respective endpoints in AWS. \n Important:
+                          These endpoints must accept the `x-dtc` header, or the requests
+                          will fail"
+                        type: string
+                      customConfigurationProperties:
+                        description: "The location to send monitoring data from the
+                          JavaScript tag. \n  Specify either a relative or an absolute
+                          URL. If you use an absolute URL, data will be sent using
+                          CORS. \n  **Required** for auto-injected applications, optional
+                          for agentless applications. Maximum 512 characters."
+                        type: string
+                      excludeXhrRegex:
+                        description: "You can exclude some actions from becoming XHR
+                          actions. \n Put a regular expression, matching all the required
+                          URLs, here. \n If noting specified the feature is disabled"
+                        type: string
+                      fetchRequests:
+                        description: '`fetch()` request capture enabled/disabled'
+                        type: boolean
+                      injectionMode:
+                        description: Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`,
+                          `INLINE_CODE` and `JAVASCRIPT_TAG`.
+                        type: string
+                      ipAddressRestrictionSettings:
+                        description: Settings for restricting certain ip addresses
+                          and for introducing subnet mask. It also restricts the mode
+                        properties:
+                          mode:
+                            description: The mode of the list of ip address restrictions.
+                              Possible values area `EXCLUDE` and `INCLUDE`.
+                            type: string
+                          restrictions:
+                            description: The IP addresses or the IP address ranges
+                              to be mapped to the location
+                            properties:
+                              range:
+                                description: The IP address or the IP address range
+                                  to be mapped to the location
+                                items:
+                                  properties:
+                                    address:
+                                      description: "The IP address to be mapped. \n
+                                        For an IP address range, this is the **from**
+                                        address."
+                                      type: string
+                                    addressTo:
+                                      description: The **to** address of the IP address
+                                        range.
+                                      type: string
+                                    subnetMask:
+                                      description: The subnet mask of the IP address
+                                        range. Valid values range from 0 to 128.
+                                      format: int64
+                                      type: integer
+                                  required:
+                                  - address
+                                  type: object
+                                minItems: 1
+                                type: array
+                            required:
+                            - range
+                            type: object
+                        required:
+                        - mode
+                        type: object
+                      javascriptFrameworkSupport:
+                        description: Support of various JavaScript frameworks
+                        properties:
+                          activeXObject:
+                            description: ActiveXObject support enabled/disabled
+                            type: boolean
+                          angular:
+                            description: AngularJS and Angular support enabled/disabled
+                            type: boolean
+                          dojo:
+                            description: Dojo support enabled/disabled
+                            type: boolean
+                          extjs:
+                            description: ExtJS, Sencha Touch support enabled/disabled
+                            type: boolean
+                          icefaces:
+                            description: ICEfaces support enabled/disabled
+                            type: boolean
+                          jquery:
+                            description: jQuery, Backbone.js support enabled/disabled
+                            type: boolean
+                          mooTools:
+                            description: MooTools support enabled/disabled
+                            type: boolean
+                          prototype:
+                            description: Prototype support enabled/disabled
+                            type: boolean
+                        type: object
+                      javascriptInjectionRules:
+                        description: Java script injection rules
+                        properties:
+                          rule:
+                            description: Java script injection rule
+                            items:
+                              properties:
+                                enabled:
+                                  description: '`fetch()` request capture enabled/disabled'
+                                  type: boolean
+                                htmlPattern:
+                                  description: The HTML pattern of the java script
+                                    injection
+                                  type: string
+                                rule:
+                                  description: The url rule of the java script injection.
+                                    Possible values are `AFTER_SPECIFIC_HTML`, `AUTOMATIC_INJECTION`,
+                                    `BEFORE_SPECIFIC_HTML` and `DO_NOT_INJECT`.
+                                  type: string
+                                target:
+                                  description: The target against which the rule of
+                                    the java script injection should be matched. Possible
+                                    values are `PAGE_QUERY` and `URL`.
+                                  type: string
+                                urlOperator:
+                                  description: The url operator of the java script
+                                    injection. Possible values are `ALL_PAGES`, `CONTAINS`,
+                                    `ENDS_WITH`, `EQUALS` and `STARTS_WITH`.
+                                  type: string
+                                urlPattern:
+                                  description: The url pattern of the java script
+                                    injection
+                                  type: string
+                              required:
+                              - rule
+                              - urlOperator
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - rule
+                        type: object
+                      libraryFileLocation:
+                        description: "The location of your application’s custom JavaScript
+                          library file. \n  If nothing specified the root directory
+                          of your web server is used. \n  **Required** for auto-injected
+                          applications, not supported by agentless applications. Maximum
+                          512 characters."
+                        type: string
+                      monitoringDataPath:
+                        description: "The location to send monitoring data from the
+                          JavaScript tag. \n  Specify either a relative or an absolute
+                          URL. If you use an absolute URL, data will be sent using
+                          CORS. \n  **Required** for auto-injected applications, optional
+                          for agentless applications. Maximum 512 characters."
+                        type: string
+                      scriptTagCacheDurationInHours:
+                        description: Time duration for the cache settings
+                        format: int64
+                        type: integer
+                      secureCookieAttribute:
+                        description: Secure attribute usage for Dynatrace cookies
+                          enabled/disabled
+                        type: boolean
+                      serverRequestPathID:
+                        description: Path to identify the server’s request ID. Maximum
+                          150 characters.
+                        type: string
+                      xmlHTTPRequest:
+                        description: '`XmlHttpRequest` support enabled/disabled'
+                        type: boolean
+                    required:
+                    - contentCapture
+                    - injectionMode
+                    type: object
+                  name:
+                    description: The name of the web application, displayed in the
+                      UI
+                    type: string
+                  realUserMonitoringEnabled:
+                    description: Real user monitoring enabled/disabled
+                    type: boolean
+                  sessionReplayConfig:
+                    description: Settings regarding Session Replay
+                    properties:
+                      costControlPercentage:
+                        description: Session replay sampling rating in percent
+                        format: int64
+                        type: integer
+                      cssResourceCapturingExclusionRules:
+                        description: A list of URLs to be excluded from CSS resource
+                          capturing
+                        items:
+                          type: string
+                        type: array
+                      enableCssResourceCapturing:
+                        description: Capture (`true`) or don't capture (`false`) CSS
+                          resources from the session
+                        type: boolean
+                      enabled:
+                        description: SessionReplay Enabled/Disabled
+                        type: boolean
+                    required:
+                    - costControlPercentage
+                    type: object
+                  type:
+                    description: The type of the web application. Possible values
+                      are `AUTO_INJECTED`, `BROWSER_EXTENSION_INJECTED` and `MANUALLY_INJECTED`
+                    type: string
+                  urlInjectionPattern:
+                    description: URL injection pattern for manual web application
+                    type: string
+                  userActionAndSessionProperties:
+                    description: User action and session properties settings
+                    properties:
+                      property:
+                        description: User action and session properties settings
+                        properties:
+                          ID:
+                            description: Unique id among all userTags and properties
+                              of this application
+                            format: int64
+                            type: integer
+                          aggregation:
+                            description: "The aggregation type of the property. \n
+                              \  It defines how multiple values of the property are
+                              aggregated. Possible values are `AVERAGE`, `FIRST`,
+                              `LAST`, `MAXIMUM`, `MINIMUM` and `SUM`."
+                            type: string
+                          cleanupRule:
+                            description: "The cleanup rule of the property. \n Defines
+                              how to extract the data you need from a string value.
+                              Specify the [regular expression](https://dt-url.net/k9e0iaq)
+                              for the data you need there"
+                            type: string
+                          displayName:
+                            description: The display name of the property
+                            type: string
+                          ignoreCase:
+                            description: If `true`, the value of this property will
+                              always be stored in lower case. Defaults to `false`.
+                            type: boolean
+                          key:
+                            description: Key of the property
+                            type: string
+                          longStringLength:
+                            description: If the `type` is `LONG_STRING`, the max length
+                              for this property. Must be a multiple of `100`. Defaults
+                              to `200`. Maximum is `1000`.
+                            format: int64
+                            type: integer
+                          metadataID:
+                            description: If the origin is `META_DATA`, metaData id
+                              of the property
+                            format: int64
+                            type: integer
+                          origin:
+                            description: The origin of the property. Possible values
+                              are `JAVASCRIPT_API`, `META_DATA` and `SERVER_SIDE_REQUEST_ATTRIBUTE`.
+                            type: string
+                          serverSideRequestAttribute:
+                            description: "The ID of the request attribute. \n Only
+                              applicable when the **origin** is set to `SERVER_SIDE_REQUEST_ATTRIBUTE`"
+                            type: string
+                          storeAsSessionProperty:
+                            description: If `true`, the property is stored as a session
+                              property
+                            type: boolean
+                          storeAsUserActionProperty:
+                            description: If `true`, the property is stored as a user
+                              action property
+                            type: boolean
+                          type:
+                            description: The data type of the property. Possible values
+                              are `DATE`, `DOUBLE`, `LONG`, `LONG_STRING` and `STRING`.
+                            type: string
+                        required:
+                        - ID
+                        - key
+                        - origin
+                        - type
+                        type: object
+                    type: object
+                  userActionNamingSettings:
+                    description: The settings of user action naming
+                    properties:
+                      customActionNamingRules:
+                        description: User action naming rules for custom actions
+                        properties:
+                          rule:
+                            description: The settings of naming rule
+                            items:
+                              properties:
+                                conditions:
+                                  description: Defines the conditions when the naming
+                                    rule should apply
+                                  properties:
+                                    condition:
+                                      description: Defines the conditions when the
+                                        naming rule should apply
+                                      items:
+                                        properties:
+                                          operand1:
+                                            description: Must be a defined placeholder
+                                              wrapped in curly braces
+                                            type: string
+                                          operand2:
+                                            description: Must be null if operator
+                                              is `IS_EMPTY`, a regex if operator is
+                                              `MATCHES_REGULAR_ERPRESSION`. In all
+                                              other cases the value can be a freetext
+                                              or a placeholder wrapped in curly braces
+                                            type: string
+                                          operator:
+                                            description: The operator of the condition.
+                                              Possible values are `CONTAINS`, `ENDS_WITH`,
+                                              `EQUALS`, `IS_EMPTY`, `IS_NOT_EMPTY`,
+                                              `MATCHES_REGULAR_EXPRESSION`, `NOT_CONTAINS`,
+                                              `NOT_ENDS_WITH`, `NOT_EQUALS`, `NOT_MATCHES_REGULAR_EXPRESSION`,
+                                              `NOT_STARTS_WITH` and `STARTS_WITH`.
+                                            type: string
+                                        required:
+                                        - operand1
+                                        - operator
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - condition
+                                  type: object
+                                template:
+                                  description: Naming pattern. Use Curly brackets
+                                    `{}` to select placeholders
+                                  type: string
+                                useOrConditions:
+                                  description: If set to `true` the conditions will
+                                    be connected by logical OR instead of logical
+                                    AND
+                                  type: boolean
+                              required:
+                              - template
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - rule
+                        type: object
+                      ignoreCase:
+                        description: Case insensitive naming
+                        type: boolean
+                      loadActionNamingRules:
+                        description: User action naming rules for loading actions
+                        properties:
+                          rule:
+                            description: The settings of naming rule
+                            items:
+                              properties:
+                                conditions:
+                                  description: Defines the conditions when the naming
+                                    rule should apply
+                                  properties:
+                                    condition:
+                                      description: Defines the conditions when the
+                                        naming rule should apply
+                                      items:
+                                        properties:
+                                          operand1:
+                                            description: Must be a defined placeholder
+                                              wrapped in curly braces
+                                            type: string
+                                          operand2:
+                                            description: Must be null if operator
+                                              is `IS_EMPTY`, a regex if operator is
+                                              `MATCHES_REGULAR_ERPRESSION`. In all
+                                              other cases the value can be a freetext
+                                              or a placeholder wrapped in curly braces
+                                            type: string
+                                          operator:
+                                            description: The operator of the condition.
+                                              Possible values are `CONTAINS`, `ENDS_WITH`,
+                                              `EQUALS`, `IS_EMPTY`, `IS_NOT_EMPTY`,
+                                              `MATCHES_REGULAR_EXPRESSION`, `NOT_CONTAINS`,
+                                              `NOT_ENDS_WITH`, `NOT_EQUALS`, `NOT_MATCHES_REGULAR_EXPRESSION`,
+                                              `NOT_STARTS_WITH` and `STARTS_WITH`.
+                                            type: string
+                                        required:
+                                        - operand1
+                                        - operator
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - condition
+                                  type: object
+                                template:
+                                  description: Naming pattern. Use Curly brackets
+                                    `{}` to select placeholders
+                                  type: string
+                                useOrConditions:
+                                  description: If set to `true` the conditions will
+                                    be connected by logical OR instead of logical
+                                    AND
+                                  type: boolean
+                              required:
+                              - template
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - rule
+                        type: object
+                      placeholders:
+                        description: User action placeholders
+                        properties:
+                          placeholder:
+                            description: User action placeholders
+                            items:
+                              properties:
+                                input:
+                                  description: The input for the place holder. Possible
+                                    values are `ELEMENT_IDENTIFIER`, `INPUT_TYPE`,
+                                    `METADATA`, `PAGE_TITLE`, `PAGE_URL`, `SOURCE_URL`,
+                                    `TOP_XHR_URL` and `XHR_URL`
+                                  type: string
+                                metadataID:
+                                  description: The ID of the metadata
+                                  format: int64
+                                  type: integer
+                                name:
+                                  description: Placeholder name. Valid length needs
+                                    to be between 1 and 50 characters
+                                  type: string
+                                processingPart:
+                                  description: The part to process. Possible values
+                                    are `ALL`, `ANCHOR` and `PATH`
+                                  type: string
+                                processingSteps:
+                                  description: The processing step settings
+                                  properties:
+                                    step:
+                                      description: The processing step
+                                      items:
+                                        properties:
+                                          fallbackToInput:
+                                            description: "If set to `true`: Returns
+                                              the input if `patternBefore` or `patternAfter`
+                                              cannot be found and the `type` is `SUBSTRING`.
+                                              Returns the input if `regularExpression`
+                                              doesn't match and `type` is `EXTRACT_BY_REGULAR_EXPRESSION`.
+                                              \n  Otherwise `null` is returned."
+                                            type: boolean
+                                          patternAfter:
+                                            description: The pattern after the required
+                                              value. It will be removed.
+                                            type: string
+                                          patternAfterSearchType:
+                                            description: The required occurrence of
+                                              **patternAfter**. Possible values are
+                                              `FIRST` and `LAST`.
+                                            type: string
+                                          patternBefore:
+                                            description: The pattern before the required
+                                              value. It will be removed.
+                                            type: string
+                                          patternBeforeSearchType:
+                                            description: The required occurrence of
+                                              **patternBefore**. Possible values are
+                                              `FIRST` and `LAST`.
+                                            type: string
+                                          patternToReplace:
+                                            description: "The pattern to be replaced.
+                                              \n  Only applicable if the `type` is
+                                              `REPLACE_WITH_PATTERN`."
+                                            type: string
+                                          regularExpression:
+                                            description: A regular expression for
+                                              the string to be extracted or replaced.
+                                              Only applicable if the `type` is `EXTRACT_BY_REGULAR_EXPRESSION`
+                                              or `REPLACE_WITH_REGULAR_EXPRESSION`.
+                                            type: string
+                                          replacement:
+                                            description: Replacement for the original
+                                              value
+                                            type: string
+                                          type:
+                                            description: "An action to be taken by
+                                              the processing: \n * `SUBSTRING`: Extracts
+                                              the string between `patternBefore` and
+                                              `patternAfter`. * `REPLACEMENT`: Replaces
+                                              the string between `patternBefore` and
+                                              `patternAfter` with the specified `replacement`.
+                                              * `REPLACE_WITH_PATTERN`: Replaces the
+                                              **patternToReplace** with the specified
+                                              **replacement**. * `EXTRACT_BY_REGULAR_EXPRESSION`:
+                                              Extracts the part of the string that
+                                              matches the **regularExpression**. *
+                                              `REPLACE_WITH_REGULAR_EXPRESSION`: Replaces
+                                              all occurrences that match **regularExpression**
+                                              with the specified **replacement**.
+                                              * `REPLACE_IDS`: Replaces all IDs and
+                                              UUIDs with the specified **replacement**.
+                                              Possible values are `EXTRACT_BY_REGULAR_EXPRESSION`,
+                                              `REPLACEMENT`, `REPLACE_IDS`, `REPLACE_WITH_PATTERN`,
+                                              `REPLACE_WITH_REGULAR_EXPRESSION` and
+                                              `SUBSTRING`."
+                                            type: string
+                                        required:
+                                        - type
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - step
+                                  type: object
+                                useGuessedElementIdentifier:
+                                  description: Use the element identifier that was
+                                    selected by Dynatrace
+                                  type: boolean
+                              required:
+                              - input
+                              - name
+                              - processingPart
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - placeholder
+                        type: object
+                      queryParameterCleanups:
+                        description: User action naming rules for custom actions
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      splitUserActionsByDomain:
+                        description: Deactivate this setting if different domains
+                          should not result in separate user actions
+                        type: boolean
+                      useFirstDetectedLoadAction:
+                        description: First load action found under an XHR action should
+                          be used when true. Else the deepest one under the xhr action
+                          is used
+                        type: boolean
+                      xhrActionNamingRules:
+                        description: User action naming rules for XHR actions
+                        properties:
+                          rule:
+                            description: The settings of naming rule
+                            items:
+                              properties:
+                                conditions:
+                                  description: Defines the conditions when the naming
+                                    rule should apply
+                                  properties:
+                                    condition:
+                                      description: Defines the conditions when the
+                                        naming rule should apply
+                                      items:
+                                        properties:
+                                          operand1:
+                                            description: Must be a defined placeholder
+                                              wrapped in curly braces
+                                            type: string
+                                          operand2:
+                                            description: Must be null if operator
+                                              is `IS_EMPTY`, a regex if operator is
+                                              `MATCHES_REGULAR_ERPRESSION`. In all
+                                              other cases the value can be a freetext
+                                              or a placeholder wrapped in curly braces
+                                            type: string
+                                          operator:
+                                            description: The operator of the condition.
+                                              Possible values are `CONTAINS`, `ENDS_WITH`,
+                                              `EQUALS`, `IS_EMPTY`, `IS_NOT_EMPTY`,
+                                              `MATCHES_REGULAR_EXPRESSION`, `NOT_CONTAINS`,
+                                              `NOT_ENDS_WITH`, `NOT_EQUALS`, `NOT_MATCHES_REGULAR_EXPRESSION`,
+                                              `NOT_STARTS_WITH` and `STARTS_WITH`.
+                                            type: string
+                                        required:
+                                        - operand1
+                                        - operator
+                                        type: object
+                                      minItems: 1
+                                      type: array
+                                  required:
+                                  - condition
+                                  type: object
+                                template:
+                                  description: Naming pattern. Use Curly brackets
+                                    `{}` to select placeholders
+                                  type: string
+                                useOrConditions:
+                                  description: If set to `true` the conditions will
+                                    be connected by logical OR instead of logical
+                                    AND
+                                  type: boolean
+                              required:
+                              - template
+                              type: object
+                            minItems: 1
+                            type: array
+                        required:
+                        - rule
+                        type: object
+                    type: object
+                  userTags:
+                    description: User tags settings
+                    properties:
+                      tag:
+                        description: User tag settings
+                        items:
+                          properties:
+                            ID:
+                              description: A unique ID among all userTags and properties
+                                of this application. Minimum value is 1.
+                              format: int64
+                              type: integer
+                            cleanupRule:
+                              description: Cleanup rule expression of the userTag
+                              type: string
+                            ignoreCase:
+                              description: If `true`, the value of this tag will always
+                                be stored in lower case. Defaults to `false`.
+                              type: boolean
+                            metadataID:
+                              description: If it's of type metaData, metaData id of
+                                the userTag
+                              format: int64
+                              type: integer
+                            serverSideRequestAttribute:
+                              description: The ID of the RrequestAttribute for the
+                                userTag
+                              type: string
+                          required:
+                          - ID
+                          type: object
+                        minItems: 1
+                        type: array
+                    required:
+                    - tag
+                    type: object
+                  waterfallSettings:
+                    description: These settings influence the monitoring data you
+                      receive for 3rd party, CDN, and 1st party resources
+                    properties:
+                      resourceBrowserCachingThreshold:
+                        description: Warn about resources with a lower browser cache
+                          rate above *X*%. Values between 1 and 100 are allowed.
+                        format: int64
+                        type: integer
+                      resourcesThreshold:
+                        description: Warn about resources larger than *X* bytes. Values
+                          between 0 and 99999000 are allowed.
+                        format: int64
+                        type: integer
+                      slowCndResourcesThreshold:
+                        description: Warn about slow CDN resources with a response
+                          time above *X* ms. Values between 0 and 99999000 are allowed.
+                        format: int64
+                        type: integer
+                      slowFirstPartyResourcesThreshold:
+                        description: Warn about slow 1st party resources with a response
+                          time above *X* ms. Values between 0 and 99999000 are allowed.
+                        format: int64
+                        type: integer
+                      slowThirdPartyResourcesThreshold:
+                        description: Warn about slow 3rd party resources with a response
+                          time above *X* ms. Values between 0 and 99999000 are allowed.
+                        format: int64
+                        type: integer
+                      speedIndexVisuallyCompleteRatioThreshold:
+                        description: Warn if Speed index exceeds *X* % of Visually
+                          complete. Values between 1 and 99 are allowed.
+                        format: int64
+                        type: integer
+                      uncompressedResourcesThreshold:
+                        description: Warn about uncompressed resources larger than
+                          *X* bytes. Values between 0 and 99999 are allowed.
+                        format: int64
+                        type: integer
+                    required:
+                    - resourceBrowserCachingThreshold
+                    - resourcesThreshold
+                    - slowCndResourcesThreshold
+                    - slowFirstPartyResourcesThreshold
+                    - slowThirdPartyResourcesThreshold
+                    - speedIndexVisuallyCompleteRatioThreshold
+                    - uncompressedResourcesThreshold
+                    type: object
+                  xhrActionApdexSettings:
+                    description: Defines the XHR Action Apdex settings of an application
+                    properties:
+                      frustratingFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a tolerable user experience, when the configured KPM is
+                          not available. Values between 0 and 240000 are allowed.
+                        format: int64
+                        type: integer
+                      frustratingThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          tolerable user experience. Values between 0 and 240000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                      threshold:
+                        description: no documentation available
+                        format: int64
+                        type: integer
+                      toleratedFallbackThreshold:
+                        description: Fallback threshold of an XHR action, defining
+                          a satisfied user experience, when the configured KPM is
+                          not available. Values between 0 and 60000 are allowed.
+                        format: int64
+                        type: integer
+                      toleratedThreshold:
+                        description: Maximal value of apdex, which is considered as
+                          satisfied user experience. Values between 0 and 60000 are
+                          allowed.
+                        format: int64
+                        type: integer
+                    type: object
+                  xhrActionKeyPerformanceMetric:
+                    description: The key performance metric of XHR actions. Possible
+                      values are `ACTION_DURATION`, `RESPONSE_END`, `RESPONSE_START`
+                      and `VISUALLY_COMPLETE`.
+                    type: string
+                required:
+                - costControlUserSessionPercentage
+                - customActionApdexSettings
+                - loadActionApdexSettings
+                - loadActionKeyPerformanceMetric
+                - monitoringSettings
+                - name
+                - type
+                - waterfallSettings
+                - xhrActionApdexSettings
+                - xhrActionKeyPerformanceMetric
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

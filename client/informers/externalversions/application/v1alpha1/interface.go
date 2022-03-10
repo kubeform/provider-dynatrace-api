@@ -26,6 +26,10 @@ import (
 type Interface interface {
 	// Anomalieses returns a AnomaliesInformer.
 	Anomalieses() AnomaliesInformer
+	// DataPrivacies returns a DataPrivacyInformer.
+	DataPrivacies() DataPrivacyInformer
+	// ErrorRuleses returns a ErrorRulesInformer.
+	ErrorRuleses() ErrorRulesInformer
 }
 
 type version struct {
@@ -42,4 +46,14 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // Anomalieses returns a AnomaliesInformer.
 func (v *version) Anomalieses() AnomaliesInformer {
 	return &anomaliesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DataPrivacies returns a DataPrivacyInformer.
+func (v *version) DataPrivacies() DataPrivacyInformer {
+	return &dataPrivacyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// ErrorRuleses returns a ErrorRulesInformer.
+func (v *version) ErrorRuleses() ErrorRulesInformer {
+	return &errorRulesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

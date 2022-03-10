@@ -28,6 +28,8 @@ import (
 type ApplicationV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	AnomaliesesGetter
+	DataPrivaciesGetter
+	ErrorRulesesGetter
 }
 
 // ApplicationV1alpha1Client is used to interact with features provided by the application.dynatrace.kubeform.com group.
@@ -37,6 +39,14 @@ type ApplicationV1alpha1Client struct {
 
 func (c *ApplicationV1alpha1Client) Anomalieses(namespace string) AnomaliesInterface {
 	return newAnomalieses(c, namespace)
+}
+
+func (c *ApplicationV1alpha1Client) DataPrivacies(namespace string) DataPrivacyInterface {
+	return newDataPrivacies(c, namespace)
+}
+
+func (c *ApplicationV1alpha1Client) ErrorRuleses(namespace string) ErrorRulesInterface {
+	return newErrorRuleses(c, namespace)
 }
 
 // NewForConfig creates a new ApplicationV1alpha1Client for the given config.
