@@ -1,0 +1,425 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: dynatrace.kubeform.com
+    app.kubernetes.io/part-of: kubeform.com
+  name: dataprivacies.application.dynatrace.kubeform.com
+spec:
+  group: application.dynatrace.kubeform.com
+  names:
+    kind: DataPrivacy
+    listKind: DataPrivacyList
+    plural: dataprivacies
+    singular: dataprivacy
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              backendRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              providerRef:
+                description: LocalObjectReference contains enough information to let
+                  you locate the referenced object inside the same namespace.
+                properties:
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                type: object
+              resource:
+                properties:
+                  dataCaptureOptIn:
+                    description: Set to `true` to disable data capture and cookies
+                      until JavaScriptAPI `dtrum.enable()` is called
+                    type: boolean
+                  doNotTrackBehaviour:
+                    description: "How to handle the \"Do Not Track\" header: \n *
+                      `IGNORE_DO_NOT_TRACK`: ignore the header and capture the data.
+                      * `CAPTURE_ANONYMIZED`: capture the data but do not tie it to
+                      the user. * `DO_NOT_CAPTURE`: respect the header and do not
+                      capture."
+                    type: string
+                  id:
+                    type: string
+                  persistentCookieForUserTracking:
+                    description: Set to `true` to set persistent cookie in order to
+                      recognize returning devices
+                    type: boolean
+                  sessionReplayDataPrivacy:
+                    description: Data privacy settings for Session Replay
+                    properties:
+                      contentMaskingSettings:
+                        description: "Content masking settings for Session Replay.
+                          \n For more details, see [Configure Session Replay](https://dt-url.net/0m03slq)
+                          in Dynatrace Documentation"
+                        properties:
+                          playback:
+                            description: Configuration of the Session Replay masking
+                              during Playback
+                            properties:
+                              preset:
+                                description: "The type of the masking: \n * `MASK_ALL`:
+                                  Mask all texts, user input, and images. * `MASK_USER_INPUT`:
+                                  Mask all data that is provided through user input
+                                  * `ALLOW_LIST`: Only elements, specified in **maskingRules**
+                                  are shown, everything else is masked. * `BLOCK_LIST`:
+                                  Elements, specified in **maskingRules** are masked,
+                                  everything else is shown"
+                                type: string
+                              rules:
+                                description: A list of masking rules
+                                properties:
+                                  rule:
+                                    description: The masking rule defining how data
+                                      is hidden
+                                    items:
+                                      properties:
+                                        selector:
+                                          description: "The selector for the element
+                                            or the attribute to be masked. \n Specify
+                                            a CSS expression for an element or a [regular
+                                            expression](https://dt-url.net/k9e0iaq)
+                                            for an attribute"
+                                          type: string
+                                        type:
+                                          description: The type of the masking rule
+                                          type: string
+                                        userInteractionHidden:
+                                          description: Interactions with the element
+                                            are (`true`) or are not (`false) masked
+                                          type: boolean
+                                      required:
+                                      - selector
+                                      - type
+                                      type: object
+                                    minItems: 1
+                                    type: array
+                                required:
+                                - rule
+                                type: object
+                            required:
+                            - preset
+                            type: object
+                          recording:
+                            description: Configuration of the Session Replay masking
+                              during Recording
+                            properties:
+                              preset:
+                                description: "The type of the masking: \n * `MASK_ALL`:
+                                  Mask all texts, user input, and images. * `MASK_USER_INPUT`:
+                                  Mask all data that is provided through user input
+                                  * `ALLOW_LIST`: Only elements, specified in **maskingRules**
+                                  are shown, everything else is masked. * `BLOCK_LIST`:
+                                  Elements, specified in **maskingRules** are masked,
+                                  everything else is shown"
+                                type: string
+                              rules:
+                                description: A list of masking rules
+                                properties:
+                                  rule:
+                                    description: The masking rule defining how data
+                                      is hidden
+                                    items:
+                                      properties:
+                                        selector:
+                                          description: "The selector for the element
+                                            or the attribute to be masked. \n Specify
+                                            a CSS expression for an element or a [regular
+                                            expression](https://dt-url.net/k9e0iaq)
+                                            for an attribute"
+                                          type: string
+                                        type:
+                                          description: The type of the masking rule
+                                          type: string
+                                        userInteractionHidden:
+                                          description: Interactions with the element
+                                            are (`true`) or are not (`false) masked
+                                          type: boolean
+                                      required:
+                                      - selector
+                                      - type
+                                      type: object
+                                    minItems: 1
+                                    type: array
+                                required:
+                                - rule
+                                type: object
+                            required:
+                            - preset
+                            type: object
+                        required:
+                        - playback
+                        - recording
+                        type: object
+                      optIn:
+                        description: If `true`, session recording is disabled until
+                          JavaScriptAPI `dtrum.enableSessionReplay()` is called
+                        type: boolean
+                      urlExclusionRules:
+                        description: A list of URLs to be excluded from recording
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                    required:
+                    - contentMaskingSettings
+                    type: object
+                  webApplicationID:
+                    description: Dynatrace entity ID of the web application
+                    type: string
+                required:
+                - doNotTrackBehaviour
+                - sessionReplayDataPrivacy
+                - webApplicationID
+                type: object
+              state:
+                properties:
+                  dataCaptureOptIn:
+                    description: Set to `true` to disable data capture and cookies
+                      until JavaScriptAPI `dtrum.enable()` is called
+                    type: boolean
+                  doNotTrackBehaviour:
+                    description: "How to handle the \"Do Not Track\" header: \n *
+                      `IGNORE_DO_NOT_TRACK`: ignore the header and capture the data.
+                      * `CAPTURE_ANONYMIZED`: capture the data but do not tie it to
+                      the user. * `DO_NOT_CAPTURE`: respect the header and do not
+                      capture."
+                    type: string
+                  id:
+                    type: string
+                  persistentCookieForUserTracking:
+                    description: Set to `true` to set persistent cookie in order to
+                      recognize returning devices
+                    type: boolean
+                  sessionReplayDataPrivacy:
+                    description: Data privacy settings for Session Replay
+                    properties:
+                      contentMaskingSettings:
+                        description: "Content masking settings for Session Replay.
+                          \n For more details, see [Configure Session Replay](https://dt-url.net/0m03slq)
+                          in Dynatrace Documentation"
+                        properties:
+                          playback:
+                            description: Configuration of the Session Replay masking
+                              during Playback
+                            properties:
+                              preset:
+                                description: "The type of the masking: \n * `MASK_ALL`:
+                                  Mask all texts, user input, and images. * `MASK_USER_INPUT`:
+                                  Mask all data that is provided through user input
+                                  * `ALLOW_LIST`: Only elements, specified in **maskingRules**
+                                  are shown, everything else is masked. * `BLOCK_LIST`:
+                                  Elements, specified in **maskingRules** are masked,
+                                  everything else is shown"
+                                type: string
+                              rules:
+                                description: A list of masking rules
+                                properties:
+                                  rule:
+                                    description: The masking rule defining how data
+                                      is hidden
+                                    items:
+                                      properties:
+                                        selector:
+                                          description: "The selector for the element
+                                            or the attribute to be masked. \n Specify
+                                            a CSS expression for an element or a [regular
+                                            expression](https://dt-url.net/k9e0iaq)
+                                            for an attribute"
+                                          type: string
+                                        type:
+                                          description: The type of the masking rule
+                                          type: string
+                                        userInteractionHidden:
+                                          description: Interactions with the element
+                                            are (`true`) or are not (`false) masked
+                                          type: boolean
+                                      required:
+                                      - selector
+                                      - type
+                                      type: object
+                                    minItems: 1
+                                    type: array
+                                required:
+                                - rule
+                                type: object
+                            required:
+                            - preset
+                            type: object
+                          recording:
+                            description: Configuration of the Session Replay masking
+                              during Recording
+                            properties:
+                              preset:
+                                description: "The type of the masking: \n * `MASK_ALL`:
+                                  Mask all texts, user input, and images. * `MASK_USER_INPUT`:
+                                  Mask all data that is provided through user input
+                                  * `ALLOW_LIST`: Only elements, specified in **maskingRules**
+                                  are shown, everything else is masked. * `BLOCK_LIST`:
+                                  Elements, specified in **maskingRules** are masked,
+                                  everything else is shown"
+                                type: string
+                              rules:
+                                description: A list of masking rules
+                                properties:
+                                  rule:
+                                    description: The masking rule defining how data
+                                      is hidden
+                                    items:
+                                      properties:
+                                        selector:
+                                          description: "The selector for the element
+                                            or the attribute to be masked. \n Specify
+                                            a CSS expression for an element or a [regular
+                                            expression](https://dt-url.net/k9e0iaq)
+                                            for an attribute"
+                                          type: string
+                                        type:
+                                          description: The type of the masking rule
+                                          type: string
+                                        userInteractionHidden:
+                                          description: Interactions with the element
+                                            are (`true`) or are not (`false) masked
+                                          type: boolean
+                                      required:
+                                      - selector
+                                      - type
+                                      type: object
+                                    minItems: 1
+                                    type: array
+                                required:
+                                - rule
+                                type: object
+                            required:
+                            - preset
+                            type: object
+                        required:
+                        - playback
+                        - recording
+                        type: object
+                      optIn:
+                        description: If `true`, session recording is disabled until
+                          JavaScriptAPI `dtrum.enableSessionReplay()` is called
+                        type: boolean
+                      urlExclusionRules:
+                        description: A list of URLs to be excluded from recording
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                    required:
+                    - contentMaskingSettings
+                    type: object
+                  webApplicationID:
+                    description: Dynatrace entity ID of the web application
+                    type: string
+                required:
+                - doNotTrackBehaviour
+                - sessionReplayDataPrivacy
+                - webApplicationID
+                type: object
+              terminationPolicy:
+                enum:
+                - Delete
+                - DoNotTerminate
+                type: string
+              updatePolicy:
+                enum:
+                - Destroy
+                - DoNotDestroy
+                type: string
+            required:
+            - providerRef
+            - resource
+            type: object
+          status:
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
+                        changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition. This field may be empty.
+                      type: string
+                    observedGeneration:
+                      description: If set, this represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.condition[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: The reason for the condition's last transition
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                        Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: Resource generation, which is updated on mutation by
+                  the API Server.
+                format: int64
+                type: integer
+              phase:
+                description: Status defines the set of statuses a resource can have.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

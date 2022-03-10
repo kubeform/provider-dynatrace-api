@@ -19,3 +19,7 @@ limitations under the License.
 package v1alpha1
 
 type AttributeExpansion interface{}
+
+type NamingExpansion interface{}
+
+type NamingsExpansion interface{}
