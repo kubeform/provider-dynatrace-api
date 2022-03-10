@@ -40,6 +40,7 @@ import (
 	http "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/http"
 	internalinterfaces "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/internalinterfaces"
 	k8s "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/k8s"
+	key "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/key"
 	maintenance "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/maintenance"
 	management "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/management"
 	mobile "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/mobile"
@@ -50,6 +51,8 @@ import (
 	service "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/service"
 	slo "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/slo"
 	span "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/span"
+	user "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/user"
+	web "kubeform.dev/provider-dynatrace-api/client/informers/externalversions/web"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -212,6 +215,7 @@ type SharedInformerFactory interface {
 	Host() host.Interface
 	Http() http.Interface
 	K8s() k8s.Interface
+	Key() key.Interface
 	Maintenance() maintenance.Interface
 	Management() management.Interface
 	Mobile() mobile.Interface
@@ -222,6 +226,8 @@ type SharedInformerFactory interface {
 	Service() service.Interface
 	Slo() slo.Interface
 	Span() span.Interface
+	User() user.Interface
+	Web() web.Interface
 }
 
 func (f *sharedInformerFactory) Alerting() alerting.Interface {
@@ -284,6 +290,10 @@ func (f *sharedInformerFactory) K8s() k8s.Interface {
 	return k8s.New(f, f.namespace, f.tweakListOptions)
 }
 
+func (f *sharedInformerFactory) Key() key.Interface {
+	return key.New(f, f.namespace, f.tweakListOptions)
+}
+
 func (f *sharedInformerFactory) Maintenance() maintenance.Interface {
 	return maintenance.New(f, f.namespace, f.tweakListOptions)
 }
@@ -322,4 +332,12 @@ func (f *sharedInformerFactory) Slo() slo.Interface {
 
 func (f *sharedInformerFactory) Span() span.Interface {
 	return span.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) User() user.Interface {
+	return user.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Web() web.Interface {
+	return web.New(f, f.namespace, f.tweakListOptions)
 }

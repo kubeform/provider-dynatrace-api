@@ -33,6 +33,14 @@ func (c *FakeRequestV1alpha1) Attributes(namespace string) v1alpha1.AttributeInt
 	return &FakeAttributes{c, namespace}
 }
 
+func (c *FakeRequestV1alpha1) Namings(namespace string) v1alpha1.NamingInterface {
+	return &FakeNamings{c, namespace}
+}
+
+func (c *FakeRequestV1alpha1) Namingses(namespace string) v1alpha1.NamingsInterface {
+	return &FakeNamingses{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeRequestV1alpha1) RESTClient() rest.Interface {

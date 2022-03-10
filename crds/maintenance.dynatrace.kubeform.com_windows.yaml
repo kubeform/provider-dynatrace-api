@@ -60,6 +60,9 @@ spec:
                   description:
                     description: A short description of the maintenance purpose
                     type: string
+                  enabled:
+                    description: The Maintenance Window is enabled or disabled
+                    type: boolean
                   id:
                     type: string
                   metadata:
@@ -248,6 +251,9 @@ spec:
                   description:
                     description: A short description of the maintenance purpose
                     type: string
+                  enabled:
+                    description: The Maintenance Window is enabled or disabled
+                    type: boolean
                   id:
                     type: string
                   metadata:
